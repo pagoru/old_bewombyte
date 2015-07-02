@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.event.state.InitializationEvent;
@@ -31,28 +32,39 @@ public class BewomByte {
 	@Subscribe
 	public void onInitialization(InitializationEvent e){
 		
+		game = e.getGame();
+		
 		game.getCommandDispatcher().register(this, new CommandCallable() {
-						
+			
 			@Override
 			public boolean testPermission(CommandSource source) {
-				
+				// TODO Auto-generated method stub
 				return false;
 			}
 			
 			@Override
 			public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException {
-												
-				return null;
+				
+				if(source instanceof Player){
+					
+					source.sendMessage(Texts.of("HOLA CABRON!"));
+					
+					return Optional.of(CommandResult.success());
+					
+				}
+				
+				return Optional.of(CommandResult.empty());
 			}
 			
 			@Override
 			public Text getUsage(CommandSource source) {
 				// TODO Auto-generated method stub
-				return null;
+				return Texts.of("asdioasoidu");
 			}
 			
 			@Override
-			public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
+			public List<String> getSuggestions(CommandSource source, String arguments)
+					throws CommandException {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -68,7 +80,7 @@ public class BewomByte {
 				// TODO Auto-generated method stub
 				return null;
 			}
-		}, "kick"); 
+		}, "kick");
 		
 	}
 	
