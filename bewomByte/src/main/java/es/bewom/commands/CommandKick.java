@@ -14,7 +14,7 @@ public class CommandKick implements CommandExecutor {
 		
 		src.sendMessage(Texts.of("AVISAO"));
 		
-		return CommandResult.success();
+		return CommandResult.success(); 
 		
 	}
 	

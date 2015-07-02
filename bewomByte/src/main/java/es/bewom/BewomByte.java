@@ -1,11 +1,9 @@
 package es.bewom;
 
-
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.event.state.InitializationEvent;
