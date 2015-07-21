@@ -1,103 +1,84 @@
 package es.bewom;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.event.state.InitializationEvent;
-import org.spongepowered.api.event.state.ServerStartedEvent;
+import org.spongepowered.api.event.state.ServerStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.util.command.CommandCallable;
-import org.spongepowered.api.util.command.CommandException;
-import org.spongepowered.api.util.command.CommandResult;
-import org.spongepowered.api.util.command.CommandSource;
 
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
- 
+
+import es.bewom.centrospokemon.CentroManager;
+import es.bewom.commands.Commands;
+import es.bewom.spawn.SpawnManager;
+import es.bewom.teleport.TPManager;
+import es.bewom.user.BewomUser;
+import es.bewom.user.UserEventsHandler;
+import es.bewom.warps.WarpManager;
+
+/**
+ * 
+ * Main plugin class. Here is where the magic happens.
+ * @author Pagoru / McMacker4
+ *
+ */
+
 @Plugin(id="bewomByte", name="bewom byte", version="0.0a")
 public class BewomByte {
 	
 	@Inject
-	Logger log;
+	Game game;
 	
 	@Inject
-	private Game game;
+	Logger log;
 	
+	/**
+	 * Runs when the plugin is initializing.
+	 * @param e the {@link InitializationEvent}.
+	 */
 	@Subscribe
-	public void onInitialization(InitializationEvent e){
+	public void onInitialization(InitializationEvent e) {
+		
+		log.debug("BewomByte Loading.");
 		
 		game = e.getGame();
 		
-		game.getCommandDispatcher().register(this, new CommandCallable() {
-			
-			@Override
-			public boolean testPermission(CommandSource source) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-			@Override
-			public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException {
-				
-				if(source instanceof Player){
-					
-					source.sendMessage(Texts.of("HOLA CABRON!"));
-					
-					return Optional.of(CommandResult.success());
-					
-				}
-				
-				return Optional.of(CommandResult.empty());
-			}
-			
-			@Override
-			public Text getUsage(CommandSource source) {
-				// TODO Auto-generated method stub
-				return Texts.of("asdioasoidu");
-			}
-			
-			@Override
-			public List<String> getSuggestions(CommandSource source, String arguments)
-					throws CommandException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public Optional<? extends Text> getShortDescription(CommandSource source) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public Optional<? extends Text> getHelp(CommandSource source) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		}, "kick");
+		log.debug("Loading BewomByte commands.");
+		
+		Commands commands = new Commands(this, game);
+		commands.registerAll();
+		
+		log.debug("Loading BewomByte events.");
+		
+		BewomUser.setGame(this);
+		TPManager.init(this);
+		SpawnManager.load();
+		WarpManager.load();
+		CentroManager.load();
+		
+		game.getEventManager().register(this, new WarpManager());
+		game.getEventManager().register(this, new UserEventsHandler());
+//		game.getEventManager().register(this, new CentroManager());
 		
 	}
 	
+	/**
+	 * Runs when the server is stopping.
+	 * @param e the event triggered.
+	 */
 	@Subscribe
-	public void onServerStart(ServerStartedEvent e){
-		
-		log.info(">>>>>>>>>>> bewom byte cargado con exito <<<<<<<<<<<");
-		
+	public void onServerClosing(ServerStoppingEvent e) {
+		WarpManager.save();
+		CentroManager.save();
 	}
 	
-	@Subscribe
-	public void onJoin(PlayerJoinEvent e){
-		
-		Text hola = Texts.of("Hola, que tal?");
-		
-		e.getUser().sendMessage(hola);
-		
+	/**
+	 * Returns the current {@link Game}.
+	 * @return The current {@link Game}.
+	 */
+	public Game getGame() {
+		return game;
 	}
 
 }

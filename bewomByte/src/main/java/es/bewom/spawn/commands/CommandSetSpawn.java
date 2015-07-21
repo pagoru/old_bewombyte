@@ -1,34 +1,38 @@
-package es.bewom.commands;
+package es.bewom.spawn.commands;
 
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.command.args.CommandContext;
 import org.spongepowered.api.util.command.spec.CommandExecutor;
 
-public class CommandKick implements CommandExecutor {
+import es.bewom.spawn.SpawnManager;
+
+public class CommandSetSpawn implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args)
 			throws CommandException {
 		
-		Player player = args.<Player>getOne("player").get();
+		Player player;
 		
-		String reason = null;
-		
-		if(args.getOne("reason").isPresent()) {
-			reason = args.<String>getOne("reason").get();
+		if(src instanceof Player) {
+			player = (Player) src;
+		} else {
+			src.sendMessage(Texts.of("This command is for players only."));
+			return CommandResult.empty();
 		}
 		
-		player.kick(Texts.of("You were kicked by " + src.getName() + ((reason != null) ? " because " + reason : "")));
-		
-		src.sendMessage(Texts.of("You kicked " + player.getName() + " because " + reason));
+		SpawnManager.setSpawn(player.getLocation(), player.getWorld().getName());
+		SpawnManager.save();
+		player.sendMessage(Texts.of(TextColors.RED, "Spawn set."));
 		
 		return CommandResult.success();
 	}
-
+	
 	
 	
 }
