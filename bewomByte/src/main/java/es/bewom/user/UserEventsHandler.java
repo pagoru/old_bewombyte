@@ -4,18 +4,28 @@ import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.data.manipulator.tileentity.SignData;
 import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.event.entity.player.PlayerMoveEvent;
 import org.spongepowered.api.event.entity.player.PlayerQuitEvent;
+import org.spongepowered.api.service.permission.PermissionService;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.title.Titles;
 
 import com.google.common.base.Optional;
 
+import es.bewom.BewomByte;
+
 public class UserEventsHandler {
+	
+	private BewomByte plugin;
+	
+	public UserEventsHandler(BewomByte plugin) {
+		this.plugin = plugin;
+	}
 
 	/**
 	 * Event triggered when a player joins the server.
@@ -26,6 +36,7 @@ public class UserEventsHandler {
 	public void onUserJoin(PlayerJoinEvent event) {
 		
 		BewomUser user = new BewomUser(event.getUser());
+		BewomUser.addUser(user);
 		
 		//TODO: set messages for each type of join event
 		

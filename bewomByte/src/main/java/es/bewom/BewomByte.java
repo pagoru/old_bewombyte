@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.commands.Commands;
+import es.bewom.economy.EconomyManager;
 import es.bewom.spawn.SpawnManager;
 import es.bewom.teleport.TPManager;
 import es.bewom.user.BewomUser;
@@ -20,7 +21,7 @@ import es.bewom.warps.WarpManager;
 /**
  * 
  * Main plugin class. Here is where the magic happens.
- * @author Pagoru / McMacker4
+ * @author Pagoru & McMacker4
  *
  */
 
@@ -58,7 +59,8 @@ public class BewomByte {
 		CentroManager.load();
 		
 		game.getEventManager().register(this, new WarpManager());
-		game.getEventManager().register(this, new UserEventsHandler());
+		game.getEventManager().register(this, new UserEventsHandler(this));
+		game.getEventManager().register(this, new EconomyManager());
 		
 	}
 	

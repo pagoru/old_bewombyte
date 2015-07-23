@@ -29,11 +29,9 @@ public class BewomUser {
 	 * @param player to create the {@link BewomUser} from.
 	 */
 	public BewomUser(Player player) {
-		if(onlineUsers.containsKey(player.getName())) return;
 		this.player = player;
 		lastMove = plugin.getGame().getServer().getRunningTimeTicks();
 		registration = checkWebsiteRegistration();
-		onlineUsers.put(player.getName(), this);
 	}
 
 	/**
@@ -92,6 +90,18 @@ public class BewomUser {
 	private int checkWebsiteRegistration() {
 		//TODO: Get registration from web server.
 		return WebRegistration.VALID;
+	}
+	
+	/**
+	 * Adds the {@link BewomUser} to the onlineUsers {@link HashMap}
+	 * @param user
+	 */
+	public static void addUser(BewomUser user) {
+		if(onlineUsers.containsKey(user.getPlayer().getName())) {
+			System.out.println("Duplicate user (" + user.getPlayer().getName() + ")");
+			return;
+		}
+		onlineUsers.put(user.getName(), user);
 	}
 	
 	/**
