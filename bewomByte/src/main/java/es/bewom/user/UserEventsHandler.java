@@ -60,7 +60,7 @@ public class UserEventsHandler {
 	 */
 	@Subscribe
 	public void onUserQuit(PlayerQuitEvent event) {
-		BewomUser.remove(BewomUser.getUser(event.getEntity()));
+		BewomUser.remove(BewomUser.getUser(event.getUser()));
 	}
 
 	/**
