@@ -97,11 +97,11 @@ public class BewomUser {
 	 * @param user
 	 */
 	public static void addUser(BewomUser user) {
-		if(onlineUsers.containsKey(user.getPlayer().getName())) {
-			System.out.println("Duplicate user (" + user.getPlayer().getName() + ")");
-			return;
+		if(onlineUsers.containsKey(user.getName()) && onlineUsers.get(user.getName()) == null) {
+			onlineUsers.replace(user.getName(), user);
+		} else {
+			onlineUsers.put(user.getName(), user);
 		}
-		onlineUsers.put(user.getName(), user);
 	}
 	
 	/**
@@ -126,7 +126,7 @@ public class BewomUser {
 	 * Removes user from the online users list.
 	 */
 	public static void remove(BewomUser user) {
-		onlineUsers.remove(user);
+		onlineUsers.remove(user.getName());
 	}
 	
 	/**

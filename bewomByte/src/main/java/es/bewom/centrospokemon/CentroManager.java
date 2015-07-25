@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.world.Location;
@@ -134,13 +135,14 @@ public class CentroManager {
 		
 	}
 	
-	@Subscribe
+	@Subscribe(order = Order.POST)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		plugin.getGame().getCommandDispatcher().process(event.getEntity(), "cp");
+		plugin.getGame().getCommandDispatcher().process(event.getUser(), "cp");
 	}
 	
 	public static void init(BewomByte plugin) {
 		CentroManager.plugin = plugin;
+		load();
 	}
 	
 }

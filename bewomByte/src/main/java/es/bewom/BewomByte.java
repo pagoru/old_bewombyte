@@ -56,11 +56,12 @@ public class BewomByte {
 		TPManager.init(this);
 		SpawnManager.load();
 		WarpManager.load();
-		CentroManager.load();
+		CentroManager.init(this);
 		
 		game.getEventManager().register(this, new WarpManager());
 		game.getEventManager().register(this, new UserEventsHandler(this));
 		game.getEventManager().register(this, new EconomyManager());
+		game.getEventManager().register(this, new CentroManager());
 		
 	}
 	
