@@ -1,4 +1,4 @@
-package es.bewom.commands;
+package es.bewom.teleport.commands;
 
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.text.Texts;
