@@ -6,6 +6,7 @@ public class TPRequest {
 	
 	private Player player1;
 	private Player player2;
+	private int objective;
 	
 	private long time;
 	
@@ -23,12 +24,20 @@ public class TPRequest {
 		player2 = player;
 	}
 	
+	public void setObjective(int objective) {
+		this.objective = objective;
+	}
+	
 	public Player getPlayer1() {
 		return player1;
 	}
 	
 	public Player getPlayer2() {
 		return player2;
+	}
+	
+	public int getObjective() {
+		return objective;
 	}
 	
 	public boolean isStillVaild() {

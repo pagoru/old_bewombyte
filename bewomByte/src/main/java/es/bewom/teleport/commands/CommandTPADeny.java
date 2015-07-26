@@ -11,6 +11,7 @@ import org.spongepowered.api.util.command.spec.CommandExecutor;
 
 import es.bewom.teleport.TPManager;
 import es.bewom.teleport.TPRequest;
+import es.bewom.texts.TextMessages;
 
 public class CommandTPADeny implements CommandExecutor {
 	
@@ -25,21 +26,21 @@ public class CommandTPADeny implements CommandExecutor {
 			TPRequest request = TPManager.getRequest(player2);
 			
 			if(request == null) {
-				src.sendMessage(Texts.of(TextColors.RED, "No teleport request found."));
+				src.sendMessage(TextMessages.TP_NOT_FOUND);
 				return CommandResult.empty();
 			}
 			
 			Player player1 = request.getPlayer1();
 			
 			TPManager.deleteRequest(request);
-			src.sendMessage(Texts.of(TextColors.RED, "Teleport request denied."));
-			player1.sendMessage(Texts.of(TextColors.RED, "Teleport request denied."));
+			src.sendMessage(TextMessages.TP_DENIED);
+			player1.sendMessage(TextMessages.TP_DENIED);
 			
 			return CommandResult.success();
 			
 		}
 		
-		src.sendMessage(Texts.of("This command is player only."));
+		src.sendMessage(TextMessages.NOT_CONSOLE_COMPATIBLE);
 		return CommandResult.empty();
 	}
 	

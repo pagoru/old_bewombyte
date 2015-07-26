@@ -13,6 +13,10 @@ import es.bewom.BewomByte;
  */
 public class BewomUser {
 	
+	public static final int PERM_LEVEL_ADMIN = 3;
+	public static final int PERM_LEVEL_VIP = 2;
+	public static final int PERM_LEVEL_USER = 1;
+	
 	private static HashMap<String, BewomUser> onlineUsers = new HashMap<>();
 	
 	private static BewomByte plugin;
@@ -21,6 +25,8 @@ public class BewomUser {
 	
 	private boolean isAfk;
 	private int lastMove;
+	
+	private int permissionLevel;
 	
 	private int registration = -1;
 	
@@ -88,8 +94,13 @@ public class BewomUser {
 	 * @return 
 	 */
 	private int checkWebsiteRegistration() {
-		//TODO: Get registration from web server.
+		//TODO: Check Registration in the database.
 		return WebRegistration.VALID;
+	}
+	
+	private int checkPermissionLevel() {
+		//TODO: Check Permission level in the database.
+		return 0;
 	}
 	
 	/**
@@ -102,6 +113,15 @@ public class BewomUser {
 		} else {
 			onlineUsers.put(user.getName(), user);
 		}
+	}
+	
+	/**
+	 * Returns the level of permissions this user has.
+	 * This is provided by the database connected to the forums.
+	 * @return int - The permission level.
+	 */
+	public int getPermissionLevel() {
+		return permissionLevel;
 	}
 	
 	/**

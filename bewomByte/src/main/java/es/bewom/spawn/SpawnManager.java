@@ -68,18 +68,11 @@ public class SpawnManager {
 			if(!file.exists()) file.createNewFile();
 			
 			BufferedReader reader = new BufferedReader(new FileReader(file));
-			StringBuilder builder = new StringBuilder();
-			
-			String line = "";
-			while((line = reader.readLine()) != null) {
-				builder.append(line);
-			}
 			
 			reader.close();
-			String json = builder.toString();
 			
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			gson.fromJson(json, Spawn.class);
+			gson.fromJson(reader, Spawn.class);
 			
 		} catch (IOException e) {
 			e.printStackTrace();

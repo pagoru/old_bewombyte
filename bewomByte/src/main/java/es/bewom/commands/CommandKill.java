@@ -10,26 +10,38 @@ import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.command.args.CommandContext;
 import org.spongepowered.api.util.command.spec.CommandExecutor;
 
+import es.bewom.texts.TextMessages;
+import es.bewom.user.BewomUser;
+
 public class CommandKill implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args)
 			throws CommandException {
 		
-		Player player = args.<Player>getOne("player").get();
+		if(src instanceof Player) {
+			Player player = (Player) src;
+			BewomUser user = BewomUser.getUser(player);
+			if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) {
+				src.sendMessage(TextMessages.NO_PERMISSIONS);
+				return CommandResult.empty();
+			}
+		}
 		
-		if(!player.isOnline()) {
+		Player toKill = args.<Player>getOne("player").get();
+		
+		if(!toKill.isOnline()) {
 			src.sendMessage(Texts.of("Player not found."));
 			return CommandResult.empty();
 		}
 		
-		player.sendMessage(Texts.of("You were murdered"));
+		toKill.sendMessage(Texts.of("You were murdered"));
 		
-		src.sendMessage(Texts.of(TextColors.RESET, "You killed ", TextColors.GREEN, player.getName()));
+		src.sendMessage(Texts.of(TextColors.RESET, "You killed ", TextColors.GREEN, toKill.getName()));
 		
-		HealthData health = player.getHealthData();
+		HealthData health = toKill.getHealthData();
 		health.setHealth(0);
-		player.offer(health);
+		toKill.offer(health);
 		
 		return CommandResult.success();
 	}

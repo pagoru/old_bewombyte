@@ -11,6 +11,8 @@ import org.spongepowered.api.util.command.spec.CommandExecutor;
 
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
+import es.bewom.texts.TextMessages;
+import es.bewom.user.BewomUser;
 
 public class CommandCentro implements CommandExecutor {
 	
@@ -23,18 +25,24 @@ public class CommandCentro implements CommandExecutor {
 		if(src instanceof Player) {
 			player = (Player) src;
 		} else {
-			src.sendMessage(Texts.of("This command is for players only."));
+			src.sendMessage(TextMessages.NOT_CONSOLE_COMPATIBLE);
+			return CommandResult.empty();
+		}
+		
+		BewomUser user = BewomUser.getUser(player);
+		if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) {
+			player.sendMessage(TextMessages.NO_PERMISSIONS);
 			return CommandResult.empty();
 		}
 
 		CentroPokemon cp = CentroManager.getClosest(player.getLocation(), player.getWorld().getName());
 		if(cp == null) {
-			player.sendMessage(Texts.of("There are no CPs near you."));
+			player.sendMessage(Texts.of("No hay Centros Pokemon cercanos."));
 			return CommandResult.empty();
 		}
 		
 		player.transferToWorld(cp.getWorld(), cp.getVector());
-		player.sendMessage(Texts.of(TextColors.RED, "Teleport successful."));
+		player.sendMessage(Texts.of(TextColors.RED, "Teletransporte exitoso."));
 		
 		return CommandResult.success();
 	}

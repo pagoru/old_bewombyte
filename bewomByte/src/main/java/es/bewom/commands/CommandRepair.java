@@ -12,6 +12,9 @@ import org.spongepowered.api.util.command.spec.CommandExecutor;
 
 import com.google.common.base.Optional;
 
+import es.bewom.texts.TextMessages;
+import es.bewom.user.BewomUser;
+
 public class CommandRepair implements CommandExecutor {
 
 	@Override
@@ -21,6 +24,12 @@ public class CommandRepair implements CommandExecutor {
 		if(src instanceof Player) {
 			
 			Player player = (Player) src;
+			
+			BewomUser user = BewomUser.getUser(player);
+			if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) {
+				player.sendMessage(TextMessages.NO_PERMISSIONS);
+				return CommandResult.empty();
+			}
 			
 			Optional<ItemStack> itemStackOp = player.getItemInHand();
 			

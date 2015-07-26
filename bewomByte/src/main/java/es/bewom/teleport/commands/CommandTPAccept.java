@@ -11,6 +11,7 @@ import org.spongepowered.api.util.command.spec.CommandExecutor;
 
 import es.bewom.teleport.TPManager;
 import es.bewom.teleport.TPRequest;
+import es.bewom.texts.TextMessages;
 
 public class CommandTPAccept implements CommandExecutor {
 
@@ -26,27 +27,33 @@ public class CommandTPAccept implements CommandExecutor {
 			
 			if(request == null) {
 				
-				src.sendMessage(Texts.of(TextColors.RED, "No teleport request found."));
+				src.sendMessage(TextMessages.TP_NOT_FOUND);
 				return CommandResult.empty();
 				
 			}
 			
 			if(TPManager.validateRequest(request)) {
 				
-				Player player1 = request.getPlayer1();
-				player1.setLocationAndRotation(player2.getLocation(), player2.getRotation());
-				TPManager.deleteRequest(request);
-				src.sendMessage(Texts.of(TextColors.RED, "Teleport request accepted."));
-				
-				return CommandResult.success();
+				if(request.getObjective() == 2) {
+					Player player1 = request.getPlayer1();
+					player1.setLocation(player2.getLocation());
+					player1.sendMessage(TextMessages.TP_SUCCESS);
+					return CommandResult.success();
+				} else {
+					Player player1 = request.getPlayer1();
+					player2.setLocation(player1.getLocation());
+					player2.sendMessage(TextMessages.TP_SUCCESS);
+					return CommandResult.success();
+				}
 				
 			}
 			
-			src.sendMessage(Texts.of(TextColors.RED, "Teleport request expired."));
+			src.sendMessage(TextMessages.TP_EXPIRED);
 			return CommandResult.empty();
+			
 		}
 		
-		src.sendMessage(Texts.of("This command is player only."));
+		src.sendMessage(TextMessages.NOT_CONSOLE_COMPATIBLE);
 		return CommandResult.empty();
 		
 	}

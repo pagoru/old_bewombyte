@@ -26,7 +26,7 @@ public class TPManager implements Runnable {
 		
 	}
 	
-	public static void newRequest(Player player1, Player player2) {
+	public static void newRequest(Player player1, Player player2, int objective) {
 		
 		if(requests.size() != 0) {
 		
@@ -45,6 +45,7 @@ public class TPManager implements Runnable {
 		TPRequest request = new TPRequest();
 		request.setPlayer1(player1);
 		request.setPlayer2(player2);
+		request.setObjective(objective);
 		requests.add(request);
 		
 	}

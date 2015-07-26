@@ -11,7 +11,6 @@ import com.google.inject.Inject;
 
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.commands.Commands;
-import es.bewom.economy.EconomyManager;
 import es.bewom.spawn.SpawnManager;
 import es.bewom.teleport.TPManager;
 import es.bewom.user.BewomUser;
@@ -59,8 +58,7 @@ public class BewomByte {
 		CentroManager.init(this);
 		
 		game.getEventManager().register(this, new WarpManager());
-		game.getEventManager().register(this, new UserEventsHandler(this));
-		game.getEventManager().register(this, new EconomyManager());
+		game.getEventManager().register(this, new UserEventsHandler());
 		game.getEventManager().register(this, new CentroManager());
 		
 	}

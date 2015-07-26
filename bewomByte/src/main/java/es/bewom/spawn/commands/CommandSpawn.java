@@ -10,6 +10,8 @@ import org.spongepowered.api.util.command.args.CommandContext;
 import org.spongepowered.api.util.command.spec.CommandExecutor;
 
 import es.bewom.spawn.SpawnManager;
+import es.bewom.texts.TextMessages;
+import es.bewom.user.BewomUser;
 
 public class CommandSpawn implements CommandExecutor {
 
@@ -22,7 +24,13 @@ public class CommandSpawn implements CommandExecutor {
 		if(src instanceof Player) {
 			player = (Player) src;
 		} else {
-			src.sendMessage(Texts.of("This command is for players only."));
+			src.sendMessage(TextMessages.NOT_CONSOLE_COMPATIBLE);
+			return CommandResult.empty();
+		}
+		
+		BewomUser user = BewomUser.getUser(player);
+		if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) {
+			player.sendMessage(TextMessages.NO_PERMISSIONS);
 			return CommandResult.empty();
 		}
 		

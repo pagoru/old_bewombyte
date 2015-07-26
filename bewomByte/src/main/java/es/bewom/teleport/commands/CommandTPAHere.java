@@ -14,7 +14,7 @@ import es.bewom.teleport.TPManager;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
-public class CommandTPA implements CommandExecutor {
+public class CommandTPAHere implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args)
@@ -32,7 +32,7 @@ public class CommandTPA implements CommandExecutor {
 			
 			Player player2 = args.<Player>getOne("player").get();
 			
-			TPManager.newRequest(player1, player2, 2);
+			TPManager.newRequest(player1, player2, 1);
 			
 			src.sendMessage(Texts.of(TextColors.RED, "Teleport request sent."));
 			player2.sendMessage(Texts.of(TextColors.GREEN, TextStyles.BOLD, player1.getName(), TextColors.RED, TextStyles.RESET, " wants to teleport to you:"));

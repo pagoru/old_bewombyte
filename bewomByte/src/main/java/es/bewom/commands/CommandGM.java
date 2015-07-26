@@ -1,47 +1,46 @@
 package es.bewom.commands;
 
+import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.command.args.CommandContext;
 import org.spongepowered.api.util.command.spec.CommandExecutor;
 
+import com.google.common.base.Optional;
+
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
-public class CommandKick implements CommandExecutor {
+public class CommandGM implements CommandExecutor {
+	
+	Game game;
 
+	public CommandGM(Game game) {
+		this.game = game;
+	}
+	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args)
 			throws CommandException {
 		
 		if(src instanceof Player) {
-			Player player = (Player) src;
-			BewomUser user = BewomUser.getUser(player);
+			BewomUser user = BewomUser.getUser((Player) src);
 			if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) {
-				player.sendMessage(TextMessages.NO_PERMISSIONS);
+				src.sendMessage(TextMessages.NO_PERMISSIONS);
 				return CommandResult.empty();
 			}
 		}
 		
-		Player toKick = args.<Player>getOne("player").get();
+		Optional<Integer> modeOp = args.<Integer>getOne("mode");
 		
-		String reason = null;
-		
-		if(args.getOne("reason").isPresent()) {
-			reason = args.<String>getOne("reason").get();
+		if(modeOp.isPresent()) {
+			game.getCommandDispatcher().process(src, "gamemode" + modeOp.get());
 		}
 		
-		//TODO: Colores + Traducir.
-		toKick.kick(Texts.of("You were kicked by " + src.getName() + ((reason != null) ? " because " + reason : "")));
+		return CommandResult.empty();
 		
-		src.sendMessage(Texts.of("You kicked " + toKick.getName() + " because " + reason));
-		
-		return CommandResult.success();
 	}
 
-	
-	
 }

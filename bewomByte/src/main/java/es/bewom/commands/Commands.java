@@ -12,6 +12,7 @@ import es.bewom.spawn.commands.CommandSetSpawn;
 import es.bewom.spawn.commands.CommandSpawn;
 import es.bewom.teleport.commands.CommandTPA;
 import es.bewom.teleport.commands.CommandTPADeny;
+import es.bewom.teleport.commands.CommandTPAHere;
 import es.bewom.teleport.commands.CommandTPAccept;
 import es.bewom.warps.commands.CommandWarp;
 import es.bewom.warps.commands.CommandWarpDel;
@@ -95,6 +96,15 @@ public class Commands {
 				.permission("bewom.commands.tpa")
 				.description(Texts.of("Send teleport request to player."))
 				.executor(new CommandTPA())
+				.arguments(GenericArguments.onlyOne(GenericArguments.player(Texts.of("player"), game)))
+				.build();
+		
+		//tpahere <player>
+		CommandSpec cmdSpec_tpaHere = CommandSpec
+				.builder()
+				.permission("bewom.commands.tpahere")
+				.description(Texts.of("Send a request to teleport the player to the current location."))
+				.executor(new CommandTPAHere())
 				.arguments(GenericArguments.onlyOne(GenericArguments.player(Texts.of("player"), game)))
 				.build();
 		
@@ -197,6 +207,15 @@ public class Commands {
 				.executor(new CommandSetSpawn())
 				.build();
 		
+		//gm <mode>
+		CommandSpec cmdSpec_gm = CommandSpec
+				.builder()
+				.permission("bewom.commands.gm")
+				.description(Texts.of("Set own gamemode."))
+				.arguments(GenericArguments.onlyOne(GenericArguments.integer(Texts.of("mode"))))
+				.executor(new CommandGM(game))
+				.build();
+		
 		game.getCommandDispatcher().register(plugin, cmdSpec_kick, "kick");
 		game.getCommandDispatcher().register(plugin, cmdSpec_kill, "kill");
 		game.getCommandDispatcher().register(plugin, cmdSpec_killAll, "killall");
@@ -204,6 +223,7 @@ public class Commands {
 		game.getCommandDispatcher().register(plugin, cmdSpec_feed, "feed");
 		game.getCommandDispatcher().register(plugin, cmdSpec_heal, "heal");
 		game.getCommandDispatcher().register(plugin, cmdSpec_tpa, "tpa");
+		game.getCommandDispatcher().register(plugin, cmdSpec_tpaHere, "tpahere");
 		game.getCommandDispatcher().register(plugin, cmdSpec_tpaccept, "tpaccept");
 		game.getCommandDispatcher().register(plugin, cmdSpec_tpadeny, "tpdeny");
 		game.getCommandDispatcher().register(plugin, cmdSpec_repair, "repair");
@@ -216,6 +236,7 @@ public class Commands {
 		game.getCommandDispatcher().register(plugin, cmdSpec_quitarCentro, "quitarcentro", "quitarcp", "qcp");
 		game.getCommandDispatcher().register(plugin, cmdSpec_spawn, "spawn");
 		game.getCommandDispatcher().register(plugin, cmdSpec_setSpawn, "setspawn");
+		game.getCommandDispatcher().register(plugin, cmdSpec_gm, "gm");
 		
 	}
 	

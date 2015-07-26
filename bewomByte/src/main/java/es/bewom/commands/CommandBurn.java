@@ -11,11 +11,22 @@ import org.spongepowered.api.util.command.spec.CommandExecutor;
 
 import com.google.common.base.Optional;
 
+import es.bewom.texts.TextMessages;
+import es.bewom.user.BewomUser;
+
 public class CommandBurn implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args)
 			throws CommandException {
+		
+		if(src instanceof Player) {
+			BewomUser user = BewomUser.getUser((Player) src);
+			if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) {
+				src.sendMessage(TextMessages.NO_PERMISSIONS);
+				return CommandResult.empty();
+			}
+		}
 		
 		Player toBurn = args.<Player>getOne("player").get();
 		

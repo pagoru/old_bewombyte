@@ -7,9 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.spongepowered.api.event.Order;
+import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
+import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 
 import com.google.common.base.Optional;
@@ -19,8 +21,6 @@ import com.google.gson.GsonBuilder;
 import es.bewom.BewomByte;
 
 public class CentroManager {
-	
-	private static BewomByte plugin;
 	
 	public static ArrayList<CentroPokemon> centros = new ArrayList<>();
 	
@@ -108,20 +108,9 @@ public class CentroManager {
 			
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			
-			StringBuilder builder = new StringBuilder();
-			
-			String line = "";
-			while((line = reader.readLine()) != null) {
-				builder.append(line);
-			}
-			
-			reader.close();
-
-			String json = builder.toString();
-			
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			
-			CentroPokemon[] centroArray = gson.fromJson(json, CentroPokemon[].class);
+			CentroPokemon[] centroArray = gson.fromJson(reader, CentroPokemon[].class);
 			
 			centros.clear();
 			
@@ -135,13 +124,20 @@ public class CentroManager {
 		
 	}
 	
-	@Subscribe(order = Order.POST)
+	@Subscribe
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		plugin.getGame().getCommandDispatcher().process(event.getUser(), "cp");
+		Player player = event.getUser();
+		CentroPokemon cp = CentroManager.getClosest(player.getLocation(), player.getWorld().getName());
+		if(cp == null) {
+			player.sendMessage(Texts.of("No hay Centros Pokemon cercanos."));
+			return;
+		}
+		
+		player.transferToWorld(cp.getWorld(), cp.getVector());
+		player.sendMessage(Texts.of(TextColors.RED, "Teletransporte exitoso."));
 	}
 	
 	public static void init(BewomByte plugin) {
-		CentroManager.plugin = plugin;
 		load();
 	}
 	

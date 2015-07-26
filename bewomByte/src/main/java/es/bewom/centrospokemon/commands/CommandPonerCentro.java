@@ -12,6 +12,7 @@ import org.spongepowered.api.util.command.spec.CommandExecutor;
 import com.google.common.base.Optional;
 
 import es.bewom.centrospokemon.CentroManager;
+import es.bewom.user.BewomUser;
 
 public class CommandPonerCentro implements CommandExecutor {
 
@@ -24,7 +25,13 @@ public class CommandPonerCentro implements CommandExecutor {
 		if(src instanceof Player) {
 			player = (Player) src;
 		} else {
-			src.sendMessage(Texts.of("This command is for players only."));
+			src.sendMessage(Texts.of("Este comando no sirve en consola."));
+		}
+		
+		BewomUser user = BewomUser.getUser(player);
+		if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) {
+			player.sendMessage(Texts.of(TextColors.RED, "No tienes permisos."));
+			return CommandResult.empty();
 		}
 		
 		Optional<String> error = CentroManager.add(player.getLocation(), player.getWorld().getName());

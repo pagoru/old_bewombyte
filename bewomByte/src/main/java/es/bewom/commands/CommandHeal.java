@@ -11,6 +11,9 @@ import org.spongepowered.api.util.command.spec.CommandExecutor;
 
 import com.google.common.base.Optional;
 
+import es.bewom.texts.TextMessages;
+import es.bewom.user.BewomUser;
+
 public class CommandHeal implements CommandExecutor {
 
 	@Override
@@ -23,6 +26,12 @@ public class CommandHeal implements CommandExecutor {
 			player = (Player) src;
 		} else {
 			src.sendMessage(Texts.of("This command is for players only."));
+			return CommandResult.empty();
+		}
+		
+		BewomUser user = BewomUser.getUser(player);
+		if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) {
+			player.sendMessage(TextMessages.NO_PERMISSIONS);
 			return CommandResult.empty();
 		}
 		
