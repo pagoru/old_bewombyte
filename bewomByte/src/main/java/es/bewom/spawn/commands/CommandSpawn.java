@@ -35,12 +35,12 @@ public class CommandSpawn implements CommandExecutor {
 		}
 		
 		if(SpawnManager.getSpawn() == null) {
-			player.sendMessage(Texts.of(TextColors.RED, "The spawn doesn't exist."));
+			player.sendMessage(Texts.of(TextColors.RED, "No hay un spawn."));
 			return CommandResult.empty();
 		}
 		
 		player.transferToWorld(SpawnManager.getSpawn().getWorld(), SpawnManager.getSpawn().getVector());
-		player.sendMessage(Texts.of(TextColors.RED, "Teleport successful."));
+		player.sendMessage(TextMessages.TP_SUCCESS);
 		
 		return CommandResult.success();
 	}

@@ -36,7 +36,7 @@ public class CommandSetSpawn implements CommandExecutor {
 		
 		SpawnManager.setSpawn(player.getLocation(), player.getWorld().getName());
 		SpawnManager.save();
-		player.sendMessage(Texts.of(TextColors.RED, "Spawn set."));
+		player.sendMessage(Texts.of(TextColors.RED, "Spawn establecido."));
 		
 		return CommandResult.success();
 	}

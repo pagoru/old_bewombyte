@@ -2,7 +2,6 @@ package es.bewom.commands;
 
 import org.spongepowered.api.data.manipulator.entity.FoodData;
 import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
@@ -25,7 +24,7 @@ public class CommandFeed implements CommandExecutor {
 		if(src instanceof Player) {
 			player = (Player) src;
 		} else {
-			src.sendMessage(Texts.of("This command is for players only."));
+			src.sendMessage(TextMessages.NOT_CONSOLE_COMPATIBLE);
 			return CommandResult.empty();
 		}
 		
@@ -35,7 +34,7 @@ public class CommandFeed implements CommandExecutor {
 			return CommandResult.empty();
 		}
 		
-		Optional<Player> toFeedOp = args.<Player>getOne("player");
+		Optional<Player> toFeedOp = args.<Player>getOne("jugador");
 		
 		if(toFeedOp.isPresent()) {
 			Player toFeed = toFeedOp.get();

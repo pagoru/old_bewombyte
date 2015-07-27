@@ -28,16 +28,16 @@ public class CommandKill implements CommandExecutor {
 			}
 		}
 		
-		Player toKill = args.<Player>getOne("player").get();
+		Player toKill = args.<Player>getOne("jugador").get();
 		
 		if(!toKill.isOnline()) {
-			src.sendMessage(Texts.of("Player not found."));
+			src.sendMessage(Texts.of(TextColors.RED, "Jugador no encontrado."));
 			return CommandResult.empty();
 		}
 		
 		toKill.sendMessage(Texts.of("You were murdered"));
 		
-		src.sendMessage(Texts.of(TextColors.RESET, "You killed ", TextColors.GREEN, toKill.getName()));
+		src.sendMessage(Texts.of(TextColors.RESET, "Has matado a ", TextColors.GREEN, toKill.getName()));
 		
 		HealthData health = toKill.getHealthData();
 		health.setHealth(0);

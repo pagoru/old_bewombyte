@@ -35,9 +35,9 @@ public class CommandTPAHere implements CommandExecutor {
 			TPManager.newRequest(player1, player2, 1);
 			
 			src.sendMessage(Texts.of(TextColors.RED, "Teleport request sent."));
-			player2.sendMessage(Texts.of(TextColors.GREEN, TextStyles.BOLD, player1.getName(), TextColors.RED, TextStyles.RESET, " wants to teleport to you:"));
-			player2.sendMessage(Texts.of(TextColors.RED, "    Use /tpaccept to accept the request."));
-			player2.sendMessage(Texts.of(TextColors.RED, "    Use /tpdeny"));
+			player2.sendMessage(Texts.of(TextColors.GREEN, TextStyles.BOLD, player1.getName(), TextColors.RED, TextStyles.RESET, " quiere que te teletransportes a él:"));
+			player2.sendMessage(Texts.of(TextColors.RED, "    Usa /tpaccept para aceptar la solicitud."));
+			player2.sendMessage(Texts.of(TextColors.RED, "    Usa /tpdeny para denegar la solicitud."));
 			
 			return CommandResult.success();
 			

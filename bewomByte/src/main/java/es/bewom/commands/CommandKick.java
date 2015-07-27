@@ -1,7 +1,9 @@
 package es.bewom.commands;
 
 import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.text.TextBuilder;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
@@ -26,18 +28,22 @@ public class CommandKick implements CommandExecutor {
 			}
 		}
 		
-		Player toKick = args.<Player>getOne("player").get();
+		Player toKick = args.<Player>getOne("jugador").get();
 		
 		String reason = null;
 		
-		if(args.getOne("reason").isPresent()) {
-			reason = args.<String>getOne("reason").get();
+		if(args.getOne("razon").isPresent()) {
+			reason = args.<String>getOne("razon").get();
 		}
 		
-		//TODO: Colores + Traducir.
-		toKick.kick(Texts.of("You were kicked by " + src.getName() + ((reason != null) ? " because " + reason : "")));
+		TextBuilder builder = Texts.builder();
+		builder.append(Texts.of(TextColors.RED, "Has sido advertido por "));
+		builder.append(Texts.of(TextColors.GOLD, src.getName()));
+		builder.append(Texts.of(TextColors.RED, ". Razon: ", reason));
 		
-		src.sendMessage(Texts.of("You kicked " + toKick.getName() + " because " + reason));
+		toKick.kick(builder.build());
+		
+		src.sendMessage(Texts.of(TextColors.RED, "Has advertido a ", TextColors.BLACK, toKick.getName(), TextColors.RED, ". Razon: ", TextColors.DARK_GRAY + reason));
 		
 		return CommandResult.success();
 	}

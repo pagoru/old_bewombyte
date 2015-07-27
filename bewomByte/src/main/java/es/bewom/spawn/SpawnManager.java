@@ -69,10 +69,10 @@ public class SpawnManager {
 			
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			
-			reader.close();
-			
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			gson.fromJson(reader, Spawn.class);
+			spawn = gson.fromJson(reader, Spawn.class);
+			
+			reader.close();
 			
 		} catch (IOException e) {
 			e.printStackTrace();

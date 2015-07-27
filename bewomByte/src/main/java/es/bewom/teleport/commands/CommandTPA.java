@@ -30,20 +30,20 @@ public class CommandTPA implements CommandExecutor {
 				return CommandResult.empty();
 			}
 			
-			Player player2 = args.<Player>getOne("player").get();
+			Player player2 = args.<Player>getOne("jugador").get();
 			
 			TPManager.newRequest(player1, player2, 2);
 			
-			src.sendMessage(Texts.of(TextColors.RED, "Teleport request sent."));
-			player2.sendMessage(Texts.of(TextColors.GREEN, TextStyles.BOLD, player1.getName(), TextColors.RED, TextStyles.RESET, " wants to teleport to you:"));
-			player2.sendMessage(Texts.of(TextColors.RED, "    Use /tpaccept to accept the request."));
-			player2.sendMessage(Texts.of(TextColors.RED, "    Use /tpdeny"));
+			src.sendMessage(TextMessages.TP_REQUEST_SENT);
+			player2.sendMessage(Texts.of(TextColors.GREEN, TextStyles.BOLD, player1.getName(), TextColors.RED, TextStyles.RESET, " quiere teletransportarse a ti:"));
+			player2.sendMessage(Texts.of(TextColors.RED, "    Usa /tpaccept para aceptar la solicitud."));
+			player2.sendMessage(Texts.of(TextColors.RED, "    Usa /tpdeny para denegar la solicitud."));
 			
 			return CommandResult.success();
 			
 		}
 		
-		src.sendMessage(Texts.of("This command is for players only."));
+		src.sendMessage(TextMessages.NOT_CONSOLE_COMPATIBLE);
 		return CommandResult.empty();
 	}
 	

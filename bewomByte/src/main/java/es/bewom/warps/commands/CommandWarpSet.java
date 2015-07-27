@@ -14,6 +14,8 @@ import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 import com.google.common.base.Optional;
 
+import es.bewom.texts.TextMessages;
+import es.bewom.user.BewomUser;
 import es.bewom.warps.Warp;
 import es.bewom.warps.WarpManager;
 
@@ -24,11 +26,16 @@ public class CommandWarpSet implements CommandExecutor {
 			throws CommandException {
 		
 		if(!(src instanceof Player)) {
-			src.sendMessage(Texts.of("This command is for players only."));
+			src.sendMessage(TextMessages.NOT_CONSOLE_COMPATIBLE);
 			return CommandResult.empty();
 		}
 		
 		Player player = (Player) src;
+		BewomUser user = BewomUser.getUser(player);
+		if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) {
+			player.sendMessage(TextMessages.NO_PERMISSIONS);
+			return CommandResult.empty();
+		}
 		
 		String warpName = args.<String>getOne("name").get();
 		Vector3i position = player.getLocation().getBlockPosition();

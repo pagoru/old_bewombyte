@@ -18,6 +18,7 @@ import es.bewom.warps.commands.CommandWarp;
 import es.bewom.warps.commands.CommandWarpDel;
 import es.bewom.warps.commands.CommandWarpList;
 import es.bewom.warps.commands.CommandWarpSet;
+import es.bewom.world.commands.CommandWorld;
 
 public class Commands {
 	
@@ -35,29 +36,29 @@ public class Commands {
 		CommandSpec cmdSpec_kick = CommandSpec
 				.builder()
 				.permission("bewom.commands.kick")
-				.description(Texts.of("Kick Player."))
+				.description(Texts.of("Advertencia."))
 				.executor(new CommandKick())
 				.arguments(
-						GenericArguments.player(Texts.of("player"), game),
-						GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("reason"))))
+						GenericArguments.player(Texts.of("jugador"), game),
+						GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("razon"))))
 				.build();
 		
 		//kill <player>
 		CommandSpec cmdSpec_kill = CommandSpec
 				.builder()
 				.permission("bewom.commands.kill")
-				.description(Texts.of("Kill Player."))
+				.description(Texts.of("Matar a un jugador."))
 				.executor(new CommandKill())
-				.arguments(GenericArguments.onlyOne(GenericArguments.player(Texts.of("player"), game)))
+				.arguments(GenericArguments.onlyOne(GenericArguments.player(Texts.of("jugador"), game)))
 				.build();
 		
 		//killAll <entity_type>
 		CommandSpec cmdSpec_killAll = CommandSpec
 				.builder()
 				.permission("bewom.commands.killAll")
-				.description(Texts.of("Kill all of <entity_type>"))
+				.description(Texts.of("Matar todos los <entidad>"))
 				.executor(new CommandKillAll(game))
-				.arguments(GenericArguments.onlyOne(GenericArguments.choices(Texts.of("entity_type"), CommandKillAll.choices)))
+				.arguments(GenericArguments.onlyOne(GenericArguments.choices(Texts.of("entidad"), CommandKillAll.choices)))
 				.build();
 				
 		
@@ -65,45 +66,45 @@ public class Commands {
 		CommandSpec cmdSpec_burn = CommandSpec
 				.builder()
 				.permission("bewom.commands.burn")
-				.description(Texts.of("Set a player on fire (during time in seconds)."))
+				.description(Texts.of("Quemar un jugador."))
 				.executor(new CommandBurn())
 				.arguments(
-						GenericArguments.player(Texts.of("player"), game),
-						GenericArguments.optional(GenericArguments.integer(Texts.of("time"))))
+						GenericArguments.player(Texts.of("jugador"), game),
+						GenericArguments.optional(GenericArguments.integer(Texts.of("tiempo"))))
 				.build();
 		
 		//feed [player]				ERROR (Sponge)
 		CommandSpec cmdSpec_feed = CommandSpec
 				.builder()
 				.permission("bewom.commands.feed")
-				.description(Texts.of("Set players food level to max."))
+				.description(Texts.of("Dar de comer a un jugador (rellena su barra de hambre)."))
 				.executor(new CommandFeed())
-				.arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.player(Texts.of("player"), game))))
+				.arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.player(Texts.of("jugador"), game))))
 				.build();
 		
 		//heal [player]
 		CommandSpec cmdSpec_heal = CommandSpec
 				.builder()
 				.permission("bewom.commands.heal")
-				.description(Texts.of("Heals player."))
+				.description(Texts.of("Curar a un jugador."))
 				.executor(new CommandHeal())
-				.arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.player(Texts.of("player"), game))))
+				.arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.player(Texts.of("jugador"), game))))
 				.build();
 		
 		//tpa <player>
 		CommandSpec cmdSpec_tpa = CommandSpec
 				.builder()
 				.permission("bewom.commands.tpa")
-				.description(Texts.of("Send teleport request to player."))
+				.description(Texts.of("Enviar una solicitud a un jugador para teletransportarte a su posición"))
 				.executor(new CommandTPA())
-				.arguments(GenericArguments.onlyOne(GenericArguments.player(Texts.of("player"), game)))
+				.arguments(GenericArguments.onlyOne(GenericArguments.player(Texts.of("jugador"), game)))
 				.build();
 		
 		//tpahere <player>
 		CommandSpec cmdSpec_tpaHere = CommandSpec
 				.builder()
 				.permission("bewom.commands.tpahere")
-				.description(Texts.of("Send a request to teleport the player to the current location."))
+				.description(Texts.of("Enviar una solicitud a un jugador para teletransportarlo a tu posición."))
 				.executor(new CommandTPAHere())
 				.arguments(GenericArguments.onlyOne(GenericArguments.player(Texts.of("player"), game)))
 				.build();
@@ -112,7 +113,7 @@ public class Commands {
 		CommandSpec cmdSpec_tpaccept = CommandSpec
 				.builder()
 				.permission("bewom.commands.tpaccept")
-				.description(Texts.of("Accept teleport request."))
+				.description(Texts.of("Aceptar la última solicitud de teletransporte."))
 				.executor(new CommandTPAccept())
 				.build();
 		
@@ -120,7 +121,7 @@ public class Commands {
 		CommandSpec cmdSpec_tpadeny = CommandSpec
 				.builder()
 				.permission("bewom.commands.tpadeny")
-				.description(Texts.of("Deny teleport request."))
+				.description(Texts.of("Denegar la última solicitud de teletransporte."))
 				.executor(new CommandTPADeny())
 				.build();
 		
@@ -128,7 +129,7 @@ public class Commands {
 		CommandSpec cmdSpec_repair = CommandSpec
 				.builder()
 				.permission("bewom.commands.repair")
-				.description(Texts.of("Repair item in hand."))
+				.description(Texts.of("Reparar el ítem de la mano."))
 				.executor(new CommandRepair())
 				.build();
 		
@@ -136,8 +137,8 @@ public class Commands {
 		CommandSpec cmdSpec_warp = CommandSpec
 				.builder()
 				.permission("bewom.commands.warp")
-				.description(Texts.of("Teleport to specified warp."))
-				.arguments(GenericArguments.onlyOne(GenericArguments.string(Texts.of("name"))))
+				.description(Texts.of("Teletransportarse al warp especificado."))
+				.arguments(GenericArguments.onlyOne(GenericArguments.string(Texts.of("nombre"))))
 				.executor(new CommandWarp())
 				.build();
 		
@@ -145,8 +146,8 @@ public class Commands {
 		CommandSpec cmdSpec_warpSet = CommandSpec
 				.builder()
 				.permission("bewom.commands.warp")
-				.description(Texts.of("Create new warp."))
-				.arguments(GenericArguments.onlyOne(GenericArguments.string(Texts.of("name"))))
+				.description(Texts.of("Crear un nuevo warp."))
+				.arguments(GenericArguments.onlyOne(GenericArguments.string(Texts.of("nombre"))))
 				.executor(new CommandWarpSet())
 				.build();
 		
@@ -154,8 +155,8 @@ public class Commands {
 		CommandSpec cmdSpec_warpDel = CommandSpec
 				.builder()
 				.permission("bewom.commands.warp")
-				.description(Texts.of("Delete specified warp."))
-				.arguments(GenericArguments.onlyOne(GenericArguments.string(Texts.of("name"))))
+				.description(Texts.of("Eliminar el warp especificado."))
+				.arguments(GenericArguments.onlyOne(GenericArguments.string(Texts.of("nombre"))))
 				.executor(new CommandWarpDel())
 				.build();
 		
@@ -163,7 +164,7 @@ public class Commands {
 		CommandSpec cmdSpec_warpList = CommandSpec
 				.builder()
 				.permission("bewom.commands.warp")
-				.description(Texts.of("Get the list of warps."))
+				.description(Texts.of("Te devuelve la lista de warps existentes."))
 				.executor(new CommandWarpList())
 				.build();
 		
@@ -171,7 +172,7 @@ public class Commands {
 		CommandSpec cmdSpec_centro = CommandSpec
 				.builder()
 				.permission("bewom.commands.ponercentro")
-				.description(Texts.of("Go to a near CP."))
+				.description(Texts.of("Ir al centro pokemon más cercano."))
 				.executor(new CommandCentro())
 				.build();
 		
@@ -179,7 +180,7 @@ public class Commands {
 		CommandSpec cmdSpec_ponerCentro = CommandSpec
 				.builder()
 				.permission("bewom.commands.ponercentro")
-				.description(Texts.of("Set a Centro Pokemon in current position."))
+				.description(Texts.of("Establecer un centro pokemon en la posición actual."))
 				.executor(new CommandPonerCentro())
 				.build();
 		
@@ -187,7 +188,7 @@ public class Commands {
 		CommandSpec cmdSpec_quitarCentro = CommandSpec
 				.builder()
 				.permission("bewom.commands.quitarcentro")
-				.description(Texts.of("Delete the Centro Pokemon at current position."))
+				.description(Texts.of("Eliminar el centro pokemon de la posición actual."))
 				.executor(new CommandQuitarCentro())
 				.build();
 		
@@ -195,7 +196,7 @@ public class Commands {
 		CommandSpec cmdSpec_spawn = CommandSpec
 				.builder()
 				.permission("bewom.commands.spawn")
-				.description(Texts.of("Teleport to spawn."))
+				.description(Texts.of("Ir al spawn."))
 				.executor(new CommandSpawn())
 				.build();
 		
@@ -203,7 +204,7 @@ public class Commands {
 		CommandSpec cmdSpec_setSpawn = CommandSpec
 				.builder()
 				.permission("bewom.commands.setspawn")
-				.description(Texts.of("Set the spawn."))
+				.description(Texts.of("Establecer el spawn."))
 				.executor(new CommandSetSpawn())
 				.build();
 		
@@ -211,9 +212,18 @@ public class Commands {
 		CommandSpec cmdSpec_gm = CommandSpec
 				.builder()
 				.permission("bewom.commands.gm")
-				.description(Texts.of("Set own gamemode."))
-				.arguments(GenericArguments.onlyOne(GenericArguments.integer(Texts.of("mode"))))
+				.description(Texts.of("Cambiar el gamemode."))
+				.arguments(GenericArguments.onlyOne(GenericArguments.integer(Texts.of("modo"))))
 				.executor(new CommandGM(game))
+				.build();
+		
+		//world <world>
+		CommandSpec cmdSpec_world = CommandSpec
+				.builder()
+				.permission("bewom.commands.world")
+				.description(Texts.of("Ir al mundo especificado."))
+				.arguments(GenericArguments.onlyOne(GenericArguments.world(Texts.of("mundo"), game)))
+				.executor(new CommandWorld())
 				.build();
 		
 		game.getCommandDispatcher().register(plugin, cmdSpec_kick, "kick");
@@ -237,6 +247,7 @@ public class Commands {
 		game.getCommandDispatcher().register(plugin, cmdSpec_spawn, "spawn");
 		game.getCommandDispatcher().register(plugin, cmdSpec_setSpawn, "setspawn");
 		game.getCommandDispatcher().register(plugin, cmdSpec_gm, "gm");
+		game.getCommandDispatcher().register(plugin, cmdSpec_world, "world");
 		
 	}
 	

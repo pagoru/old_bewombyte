@@ -1,19 +1,19 @@
-package es.bewom.commands;
+package es.bewom.world.commands;
 
-import org.spongepowered.api.data.manipulator.entity.HealthData;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.command.args.CommandContext;
 import org.spongepowered.api.util.command.spec.CommandExecutor;
+import org.spongepowered.api.world.World;
 
 import com.google.common.base.Optional;
 
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
-public class CommandHeal implements CommandExecutor {
+public class CommandWorld implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args)
@@ -34,21 +34,16 @@ public class CommandHeal implements CommandExecutor {
 			return CommandResult.empty();
 		}
 		
-		Optional<Player> toHealOp = args.<Player>getOne("jugador");
-		
-		if(toHealOp.isPresent()) {
-			Player toHeal = toHealOp.get();
-			HealthData data = toHeal.getOrCreate(HealthData.class).get();
-			data.setHealth(20);
-			toHeal.offer(data);
+		Optional<World> worldOp = args.<World>getOne("mundo");
+		if(worldOp.isPresent()) {
+			World world = worldOp.get();
+			player.transferToWorld(world.getName(), world.getSpawnLocation().getPosition());
+			return CommandResult.success();
 		} else {
-			Player toHeal = player;
-			HealthData data = toHeal.getOrCreate(HealthData.class).get();
-			data.setHealth(20);
-			toHeal.offer(data);
+			player.sendMessage(TextMessages.WORLD_NOT_FOUND);
 		}
 		
-		return CommandResult.success();
+		return CommandResult.empty();
 	}
-
+	
 }

@@ -14,6 +14,9 @@ import org.spongepowered.api.util.command.spec.CommandExecutor;
 
 import com.google.common.base.Optional;
 
+import es.bewom.texts.TextMessages;
+import es.bewom.user.BewomUser;
+
 public class CommandKillAll implements CommandExecutor {
 	
 	@SuppressWarnings("unused")
@@ -24,10 +27,10 @@ public class CommandKillAll implements CommandExecutor {
 	public CommandKillAll(Game game) {
 		this.game = game;
 		
-		choices.put("players", "players");
-		choices.put("animals", "animals");
-		choices.put("monsters", "monsters");
-		choices.put("living", "living");
+		choices.put("jugadores", "jugadores");
+		choices.put("animales", "animales");
+		choices.put("monstruos", "monstruos");
+		choices.put("vivos", "vivos");
 		
 	}
 
@@ -37,6 +40,11 @@ public class CommandKillAll implements CommandExecutor {
 		
 		if(src instanceof Player) {
 			Player player = (Player) src;
+			BewomUser user = BewomUser.getUser(player);
+			if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) {
+				src.sendMessage(TextMessages.NO_PERMISSIONS);
+				return CommandResult.empty();
+			}
 			Optional<HealthData> healthOp = player.getOrCreate(HealthData.class);
 			if(healthOp.isPresent()) {
 				HealthData health = healthOp.get();
@@ -45,7 +53,7 @@ public class CommandKillAll implements CommandExecutor {
 			}
 		}
 		
-		return CommandResult.empty();
+		return CommandResult.success();
 				
 //		if(!(src instanceof Player)) {
 //			src.sendMessage(Texts.of("This command is for players only"));

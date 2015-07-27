@@ -38,6 +38,7 @@ public class BewomUser {
 		this.player = player;
 		lastMove = plugin.getGame().getServer().getRunningTimeTicks();
 		registration = checkWebsiteRegistration();
+		permissionLevel = checkPermissionLevel();
 	}
 
 	/**

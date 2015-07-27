@@ -28,9 +28,9 @@ public class CommandBurn implements CommandExecutor {
 			}
 		}
 		
-		Player toBurn = args.<Player>getOne("player").get();
+		Player toBurn = args.<Player>getOne("jugador").get();
 		
-		Optional<Integer> secondsOp = args.getOne("time");
+		Optional<Integer> secondsOp = args.getOne("timepo");
 		int seconds = 0;
 		
 		if(secondsOp.isPresent()) {
@@ -47,7 +47,7 @@ public class CommandBurn implements CommandExecutor {
 			
 			FlamableData ignite = data.get();
 			
-			src.sendMessage(Texts.of(toBurn.getName() + " is burning"));
+			src.sendMessage(Texts.of(toBurn.getName() + " está ardiendo."));
 			
 			toBurn.offer(ignite);
 			
