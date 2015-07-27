@@ -5,15 +5,19 @@ import org.spongepowered.api.data.manipulator.tileentity.SignData;
 import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.Subscribe;
+import org.spongepowered.api.event.entity.player.PlayerChatEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.event.entity.player.PlayerMoveEvent;
 import org.spongepowered.api.event.entity.player.PlayerQuitEvent;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.title.Titles;
 
 import com.google.common.base.Optional;
+
+import es.bewom.user.messages.BewomMessageSink;
 
 public class UserEventsHandler {
 
@@ -42,6 +46,13 @@ public class UserEventsHandler {
 		}
 
 	}
+	
+	@Subscribe
+	public void onUserChat(PlayerChatEvent event) {
+		BewomMessageSink sink = new BewomMessageSink();
+		Text newMessage = sink.transformMessage(event.getSource(), event.getMessage());
+		event.setNewMessage(newMessage);
+	}
 
 	/**
 	 * Event triggered when a player leaves the server.
@@ -50,7 +61,7 @@ public class UserEventsHandler {
 	 */
 	@Subscribe
 	public void onUserQuit(PlayerQuitEvent event) {
-		BewomUser.remove(BewomUser.getUser(event.getUser()));
+		BewomUser.remove(BewomUser.getUser(event.getUser().getUniqueId()));
 	}
 
 	/**
@@ -62,7 +73,7 @@ public class UserEventsHandler {
 	@Subscribe
 	public void onUserMoved(PlayerMoveEvent event) {
 		Player player = event.getUser();
-		if (BewomUser.getUser(player).getRegistration() == WebRegistration.NOT_REGISTERED) {
+		if (BewomUser.getUser(player.getUniqueId()).getRegistration() == WebRegistration.NOT_REGISTERED) {
 			if (!event.getOldLocation().equals(event.getNewLocation())) {
 				event.setNewLocation(event.getOldLocation());
 				event.getUser().sendTitle(

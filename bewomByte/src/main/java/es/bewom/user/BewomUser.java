@@ -1,8 +1,11 @@
 package es.bewom.user;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.spongepowered.api.entity.player.Player;
+
+import com.google.common.base.Optional;
 
 import es.bewom.BewomByte;
 
@@ -17,11 +20,12 @@ public class BewomUser {
 	public static final int PERM_LEVEL_VIP = 2;
 	public static final int PERM_LEVEL_USER = 1;
 	
-	private static HashMap<String, BewomUser> onlineUsers = new HashMap<>();
+	private static HashMap<UUID, BewomUser> onlineUsers = new HashMap<>();
 	
 	private static BewomByte plugin;
 	
 	private Player player;
+	private UUID uuid;
 	
 	private boolean isAfk;
 	private int lastMove;
@@ -36,6 +40,7 @@ public class BewomUser {
 	 */
 	public BewomUser(Player player) {
 		this.player = player;
+		this.uuid = player.getUniqueId();
 		lastMove = plugin.getGame().getServer().getRunningTimeTicks();
 		registration = checkWebsiteRegistration();
 		permissionLevel = checkPermissionLevel();
@@ -53,8 +58,8 @@ public class BewomUser {
 	 * Returns the name of the {@link Player} attached to this {@link BewomUser}.
 	 * @return {@link String}
 	 */
-	public String getName() {
-		return player.getName();
+	public UUID getUUID() {
+		return uuid;
 	}
 	
 	/**
@@ -101,7 +106,7 @@ public class BewomUser {
 	
 	private int checkPermissionLevel() {
 		//TODO: Check Permission level in the database.
-		return 0;
+		return 1;
 	}
 	
 	/**
@@ -109,11 +114,7 @@ public class BewomUser {
 	 * @param user
 	 */
 	public static void addUser(BewomUser user) {
-		if(onlineUsers.containsKey(user.getName()) && onlineUsers.get(user.getName()) == null) {
-			onlineUsers.replace(user.getName(), user);
-		} else {
-			onlineUsers.put(user.getName(), user);
-		}
+		onlineUsers.put(user.getPlayer().getUniqueId(), user);
 	}
 	
 	/**
@@ -125,13 +126,22 @@ public class BewomUser {
 		return permissionLevel;
 	}
 	
+	public Optional<String> setPermissionLevel(int level) {
+		if(level < PERM_LEVEL_USER || level > PERM_LEVEL_ADMIN) {
+			return Optional.of("Este grupo no existe.");
+		}
+		this.permissionLevel = level;
+		//TODO: Save to database.
+		return Optional.absent();
+	}
+	
 	/**
 	 * Gets a {@link BewomUser} that is online.
 	 * @param name of the player.
 	 * @return The {@link BewomUser} specified.
 	 */
-	public static BewomUser getUser(String name) {
-		return onlineUsers.get(name);
+	public static BewomUser getUser(UUID uuid) {
+		return onlineUsers.get(uuid);
 	}
 	
 	/**
@@ -140,14 +150,14 @@ public class BewomUser {
 	 * @return The {@link BewomUser} or null if not found.
 	 */
 	public static BewomUser getUser(Player player) {
-		return onlineUsers.get(player.getName());
+		return getUser(player.getUniqueId());
 	}
 	
 	/**
 	 * Removes user from the online users list.
 	 */
 	public static void remove(BewomUser user) {
-		onlineUsers.remove(user.getName());
+		onlineUsers.remove(user.getUUID());
 	}
 	
 	/**

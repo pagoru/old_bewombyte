@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
-import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 
 import com.google.common.base.Optional;
@@ -39,7 +37,7 @@ public class CentroManager {
 	public static Optional<String> remove(Location location, String world) {
 		if(centros.size() == 0) return Optional.of("No hay Centros Pokemon establecidos.");
 		for(CentroPokemon centro : centros) {
-			if(centro.isEqualTo(location, world)) {
+			if(centro.isNear(location, world)) {
 				centros.remove(centro);
 				return Optional.absent();
 			}
@@ -129,12 +127,10 @@ public class CentroManager {
 		Player player = event.getUser();
 		CentroPokemon cp = CentroManager.getClosest(player.getLocation(), player.getWorld().getName());
 		if(cp == null) {
-			player.sendMessage(Texts.of("No hay Centros Pokemon cercanos."));
 			return;
 		}
-		
-		player.transferToWorld(cp.getWorld(), cp.getVector());
-		player.sendMessage(Texts.of(TextColors.RED, "Teletransporte exitoso."));
+		Location location = new Location(player.getWorld().getLocation(cp.getVector()).getExtent(), cp.getVector().add(0.5, 0, 0.5));
+		event.setLocation(location);
 	}
 	
 	public static void init(BewomByte plugin) {

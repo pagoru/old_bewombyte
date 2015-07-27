@@ -65,12 +65,6 @@ public class BewomByte {
 		
 	}
 	
-	@Subscribe
-	public void onServerStarting(ServerStartingEvent event) {
-		System.out.println("Loading worlds.");
-		WorldManager.init(game);
-	}
-	
 	/**
 	 * Runs when the server is stopping.
 	 * @param e the event triggered.

@@ -36,6 +36,14 @@ public class CentroPokemon {
 		return false;
 	}
 	
+	public boolean isNear(Location location, String world) {
+		if(!this.world.equals(world)) return false;
+		if(location.getPosition().distance(getVector()) < 1) {
+			return true;
+		}
+		return false;
+	}
+	
 	public int distance(Location location) {
 		Vector3i pos = new Vector3i(x, y, z);
 		Vector3i loc = new Vector3i(location.getBlockX(), location.getBlockY(), location.getBlockZ());

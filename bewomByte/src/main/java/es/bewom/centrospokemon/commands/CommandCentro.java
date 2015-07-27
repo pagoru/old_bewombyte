@@ -37,7 +37,7 @@ public class CommandCentro implements CommandExecutor {
 
 		CentroPokemon cp = CentroManager.getClosest(player.getLocation(), player.getWorld().getName());
 		if(cp == null) {
-			player.sendMessage(Texts.of("No hay Centros Pokemon cercanos."));
+			player.sendMessage(Texts.of(TextColors.RED, "No hay Centros Pokemon cercanos."));
 			return CommandResult.empty();
 		}
 		
