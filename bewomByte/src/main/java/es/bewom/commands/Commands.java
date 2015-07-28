@@ -262,6 +262,7 @@ public class Commands {
 		game.getCommandDispatcher().register(plugin, cmdSpec_say, "say", "broadcast");
 		
 		game.getCommandDispatcher().register(plugin, new CommandGM(), "gm");
+		game.getCommandDispatcher().register(plugin, new CommandInv(game), "inv", "invsee");
 		
 	}
 	

@@ -31,6 +31,7 @@ public class BewomUser {
 	private int lastMove;
 	
 	private int permissionLevel;
+	private int warnings;
 	
 	private int registration = -1;
 	
@@ -44,6 +45,7 @@ public class BewomUser {
 		lastMove = plugin.getGame().getServer().getRunningTimeTicks();
 		registration = checkWebsiteRegistration();
 		permissionLevel = checkPermissionLevel();
+		warnings = checkNumberOfWarnings();
 	}
 
 	/**
@@ -109,12 +111,9 @@ public class BewomUser {
 		return 1;
 	}
 	
-	/**
-	 * Adds the {@link BewomUser} to the onlineUsers {@link HashMap}
-	 * @param user
-	 */
-	public static void addUser(BewomUser user) {
-		onlineUsers.put(user.getPlayer().getUniqueId(), user);
+	private int checkNumberOfWarnings() {
+		//TODO: Check the number of warnings in the database.
+		return 0;
 	}
 	
 	/**
@@ -154,10 +153,24 @@ public class BewomUser {
 	}
 	
 	/**
+	 * Adds the {@link BewomUser} to the onlineUsers {@link HashMap}
+	 * @param user
+	 */
+	public static void addUser(BewomUser user) {
+		onlineUsers.put(user.getUUID(), user);
+		System.out.println(onlineUsers.keySet());
+	}
+	
+	/**
 	 * Removes user from the online users list.
 	 */
 	public static void remove(BewomUser user) {
 		onlineUsers.remove(user.getUUID());
+	}
+	
+	public static void remove(UUID uuid) {
+		onlineUsers.remove(uuid);
+		System.out.println(onlineUsers.keySet());
 	}
 	
 	/**

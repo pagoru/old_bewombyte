@@ -1,5 +1,7 @@
 package es.bewom.user;
 
+import java.util.UUID;
+
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.data.manipulator.tileentity.SignData;
 import org.spongepowered.api.entity.EntityInteractionTypes;
@@ -61,7 +63,9 @@ public class UserEventsHandler {
 	 */
 	@Subscribe
 	public void onUserQuit(PlayerQuitEvent event) {
-		BewomUser.remove(BewomUser.getUser(event.getUser().getUniqueId()));
+		Player player = event.getUser();
+		UUID uuid = player.getUniqueId();
+		BewomUser.remove(uuid);
 	}
 
 	/**
