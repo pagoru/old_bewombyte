@@ -2,7 +2,9 @@ package es.bewom.user;
 
 import java.util.UUID;
 
+import org.spongepowered.api.Game;
 import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.data.manipulator.DisplayNameData;
 import org.spongepowered.api.data.manipulator.tileentity.SignData;
 import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.entity.player.Player;
@@ -12,6 +14,9 @@ import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.event.entity.player.PlayerMoveEvent;
 import org.spongepowered.api.event.entity.player.PlayerQuitEvent;
+import org.spongepowered.api.event.entity.player.PlayerRespawnEvent;
+import org.spongepowered.api.scoreboard.Scoreboard;
+import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
@@ -22,6 +27,12 @@ import com.google.common.base.Optional;
 import es.bewom.user.messages.BewomMessageSink;
 
 public class UserEventsHandler {
+	
+	private Game game;
+	
+	public UserEventsHandler(Game game) {
+		this.game = game;
+	}
 
 	/**
 	 * Event triggered when a player joins the server.
@@ -31,7 +42,9 @@ public class UserEventsHandler {
 	@Subscribe
 	public void onUserJoin(PlayerJoinEvent event) {
 		
-		BewomUser user = new BewomUser(event.getUser());
+		Player player = event.getUser();
+		
+		BewomUser user = new BewomUser(player);
 		BewomUser.addUser(user);
 		
 		//TODO: set messages for each type of join event
@@ -85,6 +98,11 @@ public class UserEventsHandler {
 								Texts.of(TextColors.BLUE, "http://bewom.es")));
 			}
 		}
+	}
+	
+	@Subscribe
+	public void onUserRespawn(PlayerRespawnEvent event) {
+		Player player = event.getUser();
 	}
 	
 	/**

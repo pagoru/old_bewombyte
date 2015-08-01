@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.scoreboard.Team;
 
 import com.google.common.base.Optional;
 
@@ -20,7 +21,7 @@ public class BewomUser {
 	public static final int PERM_LEVEL_VIP = 2;
 	public static final int PERM_LEVEL_USER = 1;
 	
-	private static HashMap<UUID, BewomUser> onlineUsers = new HashMap<>();
+	static HashMap<UUID, BewomUser> onlineUsers = new HashMap<>();
 	
 	private static BewomByte plugin;
 	
@@ -40,12 +41,48 @@ public class BewomUser {
 	 * @param player to create the {@link BewomUser} from.
 	 */
 	public BewomUser(Player player) {
+		
 		this.player = player;
 		this.uuid = player.getUniqueId();
 		lastMove = plugin.getGame().getServer().getRunningTimeTicks();
 		registration = checkWebsiteRegistration();
 		permissionLevel = checkPermissionLevel();
 		warnings = checkNumberOfWarnings();
+		
+		for(Team team : player.getScoreboard().getTeams()) {
+			team.removeUser(player);
+		}
+		
+		switch(permissionLevel) {
+		case PERM_LEVEL_ADMIN:
+			Optional<Team> teamAdminOp = player.getScoreboard().getTeam("Admin");
+			if(!teamAdminOp.isPresent()) {
+				System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
+				break;
+			}
+			Team teamAdmin = teamAdminOp.get();
+			teamAdmin.addUser(player);
+			break;
+		case PERM_LEVEL_VIP:
+			Optional<Team> teamVipOp = player.getScoreboard().getTeam("VIP");
+			if(!teamVipOp.isPresent()) {
+				System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
+				break;
+			}
+			Team teamVip = teamVipOp.get();
+			teamVip.addUser(player);
+			break;
+		case PERM_LEVEL_USER:
+			Optional<Team> teamUserOp = player.getScoreboard().getTeam("Admin");
+			if(!teamUserOp.isPresent()) {
+				System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
+				break;
+			}
+			Team teamUser = teamUserOp.get();
+			teamUser.addUser(player);
+			break;
+		}
+		
 	}
 
 	/**
