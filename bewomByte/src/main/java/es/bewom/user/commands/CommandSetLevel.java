@@ -79,7 +79,7 @@ public class CommandSetLevel implements CommandExecutor {
 				teamVip.addUser(toChange);
 				break;
 			case BewomUser.PERM_LEVEL_USER:
-				Optional<Team> teamUserOp = toChange.getScoreboard().getTeam("Admin");
+				Optional<Team> teamUserOp = toChange.getScoreboard().getTeam("User");
 				if(!teamUserOp.isPresent()) {
 					System.err.println("El jugador " + toChange.getName() + " no ha sido añadido a ningun equipo.");
 					break;

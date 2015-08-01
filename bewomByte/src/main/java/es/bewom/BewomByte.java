@@ -26,7 +26,7 @@ import es.bewom.world.WorldManager;
  *
  */
 
-@Plugin(id="bewomByte", name="bewom byte", version="0.0a")
+@Plugin(id="bewomByte", name="bewom byte", version="0.0b")
 public class BewomByte {
 	
 	@Inject

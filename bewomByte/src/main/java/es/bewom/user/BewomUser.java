@@ -73,7 +73,7 @@ public class BewomUser {
 			teamVip.addUser(player);
 			break;
 		case PERM_LEVEL_USER:
-			Optional<Team> teamUserOp = player.getScoreboard().getTeam("Admin");
+			Optional<Team> teamUserOp = player.getScoreboard().getTeam("User");
 			if(!teamUserOp.isPresent()) {
 				System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
 				break;
