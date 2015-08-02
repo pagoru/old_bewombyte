@@ -21,9 +21,9 @@ public class BewomUser {
 	public static final int PERM_LEVEL_VIP = 2;
 	public static final int PERM_LEVEL_USER = 1;
 	
-	static HashMap<UUID, BewomUser> onlineUsers = new HashMap<>();
-	
 	private static BewomByte plugin;
+	
+	static HashMap<UUID, BewomUser> onlineUsers = new HashMap<>();
 	
 	private Player player;
 	private UUID uuid;
