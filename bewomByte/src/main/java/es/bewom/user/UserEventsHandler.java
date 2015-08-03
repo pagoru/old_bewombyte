@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import org.spongepowered.api.Game;
 import org.spongepowered.api.block.tileentity.TileEntity;
-import org.spongepowered.api.data.manipulator.DisplayNameData;
 import org.spongepowered.api.data.manipulator.tileentity.SignData;
 import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.entity.player.Player;
@@ -15,8 +14,6 @@ import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.event.entity.player.PlayerMoveEvent;
 import org.spongepowered.api.event.entity.player.PlayerQuitEvent;
 import org.spongepowered.api.event.entity.player.PlayerRespawnEvent;
-import org.spongepowered.api.scoreboard.Scoreboard;
-import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
@@ -24,11 +21,13 @@ import org.spongepowered.api.text.title.Titles;
 
 import com.google.common.base.Optional;
 
+import es.bewom.mysql.MySQL;
 import es.bewom.user.messages.BewomMessageSink;
 
 public class UserEventsHandler {
 	
 	private Game game;
+	private MySQL m = new MySQL();
 	
 	public UserEventsHandler(Game game) {
 		this.game = game;
@@ -46,6 +45,18 @@ public class UserEventsHandler {
 		
 		BewomUser user = new BewomUser(player);
 		BewomUser.addUser(user);
+		
+		String perm = (String) m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + player.getUniqueId() + "'", "type");
+		
+		if(perm.equals(BewomUser.PERM_ADMIN)){
+			user.setPermissionLevel(3);		
+		} else if (perm.equals(BewomUser.PERM_VIP)){
+			user.setPermissionLevel(2);
+		} else if(perm.equals(BewomUser.PERM_USER)){
+			user.setPermissionLevel(1);
+		}
+		
+		user.updatePermissions();
 		
 		//TODO: set messages for each type of join event
 		

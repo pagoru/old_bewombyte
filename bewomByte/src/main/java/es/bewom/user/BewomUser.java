@@ -17,6 +17,10 @@ import es.bewom.BewomByte;
  */
 public class BewomUser {
 	
+	public static final String PERM_ADMIN = "admin";
+	public static final String PERM_VIP = "vip";
+	public static final String PERM_USER = "miembro";
+	
 	public static final int PERM_LEVEL_ADMIN = 3;
 	public static final int PERM_LEVEL_VIP = 2;
 	public static final int PERM_LEVEL_USER = 1;
@@ -49,37 +53,54 @@ public class BewomUser {
 		permissionLevel = checkPermissionLevel();
 		warnings = checkNumberOfWarnings();
 		
-		for(Team team : player.getScoreboard().getTeams()) {
-			team.removeUser(player);
-		}
+		updatePermissions();
+		
+	}
+	
+	public void updatePermissions(){
 		
 		switch(permissionLevel) {
 		case PERM_LEVEL_ADMIN:
-			Optional<Team> teamAdminOp = player.getScoreboard().getTeam("Admin");
+			Optional<Team> teamAdminOp = player.getScoreboard().getTeam(PERM_ADMIN);
 			if(!teamAdminOp.isPresent()) {
 				System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
 				break;
 			}
 			Team teamAdmin = teamAdminOp.get();
-			teamAdmin.addUser(player);
+			if(!teamAdmin.getUsers().contains(player)){
+				for(Team team : player.getScoreboard().getTeams()) {
+					team.removeUser(player);
+				}
+				teamAdmin.addUser(player);
+			}
 			break;
 		case PERM_LEVEL_VIP:
-			Optional<Team> teamVipOp = player.getScoreboard().getTeam("VIP");
+			Optional<Team> teamVipOp = player.getScoreboard().getTeam(PERM_VIP);
 			if(!teamVipOp.isPresent()) {
 				System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
 				break;
 			}
 			Team teamVip = teamVipOp.get();
-			teamVip.addUser(player);
+			if(!teamVip.getUsers().contains(player)){
+				for(Team team : player.getScoreboard().getTeams()) {
+					team.removeUser(player);
+				}
+				teamVip.addUser(player);
+			}
 			break;
 		case PERM_LEVEL_USER:
-			Optional<Team> teamUserOp = player.getScoreboard().getTeam("User");
+			Optional<Team> teamUserOp = player.getScoreboard().getTeam(PERM_USER);
 			if(!teamUserOp.isPresent()) {
 				System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
 				break;
 			}
 			Team teamUser = teamUserOp.get();
-			teamUser.addUser(player);
+			if(!teamUser.getUsers().contains(player)){
+				for(Team team : player.getScoreboard().getTeams()) {
+					team.removeUser(player);
+				}
+				teamUser.addUser(player);
+			}
 			break;
 		}
 		
