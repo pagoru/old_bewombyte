@@ -12,13 +12,10 @@ import org.spongepowered.api.util.command.spec.CommandExecutor;
 
 import com.google.common.base.Optional;
 
-import es.bewom.mysql.MySQL;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
 public class CommandSetLevel implements CommandExecutor {
-
-	private MySQL m = new MySQL();
 	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args)
@@ -62,38 +59,9 @@ public class CommandSetLevel implements CommandExecutor {
 				team.removeUser(toChange);
 			}
 			
-			switch(level) {
-			case BewomUser.PERM_LEVEL_ADMIN:
-				Optional<Team> teamAdminOp = toChange.getScoreboard().getTeam(BewomUser.PERM_ADMIN);
-				if(!teamAdminOp.isPresent()) {
-					System.err.println("El jugador " + toChange.getName() + " no ha sido añadido a ningun equipo.");
-					break;
-				}
-				Team teamAdmin = teamAdminOp.get();
-				teamAdmin.addUser(toChange);
-				m.executeQuery("UPDATE `users` SET `type`='" + BewomUser.PERM_ADMIN + "' WHERE `uuid`='" + user.getUUID() + "'", null);
-				break;
-			case BewomUser.PERM_LEVEL_VIP:
-				Optional<Team> teamVipOp = toChange.getScoreboard().getTeam(BewomUser.PERM_VIP);
-				if(!teamVipOp.isPresent()) {
-					System.err.println("El jugador " + toChange.getName() + " no ha sido añadido a ningun equipo.");
-					break;
-				}
-				Team teamVip = teamVipOp.get();
-				teamVip.addUser(toChange);
-				m.executeQuery("UPDATE `users` SET `type`='" + BewomUser.PERM_VIP + "' WHERE `uuid`='" + user.getUUID() + "'", null);
-				break;
-			case BewomUser.PERM_LEVEL_USER:
-				Optional<Team> teamUserOp = toChange.getScoreboard().getTeam(BewomUser.PERM_USER);
-				if(!teamUserOp.isPresent()) {
-					System.err.println("El jugador " + toChange.getName() + " no ha sido añadido a ningun equipo.");
-					break;
-				}
-				Team teamUser = teamUserOp.get();
-				teamUser.addUser(toChange);
-				m.executeQuery("UPDATE `users` SET `type`='" + BewomUser.PERM_USER + "' WHERE `uuid`='" + user.getUUID() + "'", null);
-				break;
-			}
+			BewomUser p = BewomUser.getUser(toChange);
+			p.setPermissionLevel(level);
+			p.updatePermissions();		
 
 			src.sendMessage(Texts.of(TextColors.RED, toChange.getName(), " ahora es nivel de permisos ", level));
 			return CommandResult.success();

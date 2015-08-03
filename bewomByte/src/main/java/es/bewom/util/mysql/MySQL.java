@@ -1,4 +1,4 @@
-package es.bewom.mysql;
+package es.bewom.util.mysql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,13 +14,8 @@ public class MySQL {
 	
 	public Object executeQuery(String e, String c){
 		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-			
+		Object o = null;
+		
 		Connection conexion;
 		try {
 			conexion = DriverManager.getConnection (DB, user, password);
@@ -31,7 +26,7 @@ public class MySQL {
 				
 				while (rs.next()) {
 					
-					return rs.getObject(c);
+					o = rs.getObject(c);
 					
 				}
 				
@@ -44,7 +39,7 @@ public class MySQL {
 			e1.printStackTrace();
 		}
 			
-		return null;
+		return o;
 		
 	}
 
