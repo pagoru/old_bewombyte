@@ -97,7 +97,7 @@ public class Commands {
 		CommandSpec cmdSpec_tpa = CommandSpec
 				.builder()
 //				.permission("bewom.commands.tpa")
-				.description(Texts.of("Enviar una solicitud a un jugador para teletransportarte a su posición"))
+				.description(Texts.of("Enviar una solicitud a un jugador para teletransportarte a su posiciÃ³n"))
 				.executor(new CommandTPA())
 				.arguments(GenericArguments.onlyOne(GenericArguments.player(Texts.of("jugador"), game)))
 				.build();
@@ -106,7 +106,7 @@ public class Commands {
 		CommandSpec cmdSpec_tpaHere = CommandSpec
 				.builder()
 //				.permission("bewom.commands.tpahere")
-				.description(Texts.of("Enviar una solicitud a un jugador para teletransportarlo a tu posición."))
+				.description(Texts.of("Enviar una solicitud a un jugador para teletransportarlo a tu posiciï¿½n."))
 				.executor(new CommandTPAHere())
 				.arguments(GenericArguments.onlyOne(GenericArguments.player(Texts.of("player"), game)))
 				.build();
@@ -115,7 +115,7 @@ public class Commands {
 		CommandSpec cmdSpec_tpaccept = CommandSpec
 				.builder()
 //				.permission("bewom.commands.tpaccept")
-				.description(Texts.of("Aceptar la última solicitud de teletransporte."))
+				.description(Texts.of("Aceptar la Ãºltima solicitud de teletransporte."))
 				.executor(new CommandTPAccept())
 				.build();
 		
@@ -123,7 +123,7 @@ public class Commands {
 		CommandSpec cmdSpec_tpadeny = CommandSpec
 				.builder()
 //				.permission("bewom.commands.tpadeny")
-				.description(Texts.of("Denegar la última solicitud de teletransporte."))
+				.description(Texts.of("Denegar la Ãºltima solicitud de teletransporte."))
 				.executor(new CommandTPADeny())
 				.build();
 		
@@ -131,7 +131,7 @@ public class Commands {
 		CommandSpec cmdSpec_repair = CommandSpec
 				.builder()
 //				.permission("bewom.commands.repair")
-				.description(Texts.of("Reparar el ítem de la mano."))
+				.description(Texts.of("Reparar el item de la mano."))
 				.executor(new CommandRepair())
 				.build();
 		
@@ -174,7 +174,7 @@ public class Commands {
 		CommandSpec cmdSpec_centro = CommandSpec
 				.builder()
 //				.permission("bewom.commands.ponercentro")
-				.description(Texts.of("Ir al centro pokemon más cercano."))
+				.description(Texts.of("Ir al centro pokemon mÃ¡s cercano."))
 				.executor(new CommandCentro())
 				.build();
 		
@@ -182,7 +182,7 @@ public class Commands {
 		CommandSpec cmdSpec_ponerCentro = CommandSpec
 				.builder()
 //				.permission("bewom.commands.ponercentro")
-				.description(Texts.of("Establecer un centro pokemon en la posición actual."))
+				.description(Texts.of("Establecer un centro pokemon en la posiciÃ³n actual."))
 				.executor(new CommandPonerCentro())
 				.build();
 		
@@ -190,7 +190,7 @@ public class Commands {
 		CommandSpec cmdSpec_quitarCentro = CommandSpec
 				.builder()
 //				.permission("bewom.commands.quitarcentro")
-				.description(Texts.of("Eliminar el centro pokemon de la posición actual."))
+				.description(Texts.of("Eliminar el centro pokemon de la posiciÃ³n actual."))
 				.executor(new CommandQuitarCentro())
 				.build();
 		

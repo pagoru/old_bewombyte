@@ -47,7 +47,7 @@ public class CommandBurn implements CommandExecutor {
 			
 			FlamableData ignite = data.get();
 			
-			src.sendMessage(Texts.of(toBurn.getName() + " est· ardiendo."));
+			src.sendMessage(Texts.of(toBurn.getName() + " est√° ardiendo."));
 			
 			toBurn.offer(ignite);
 			

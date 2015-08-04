@@ -86,7 +86,7 @@ public class BewomUser {
 				player.offer(player.getGameModeData().setGameMode(GameModes.CREATIVE));
 				Optional<Team> teamAdminOp = player.getScoreboard().getTeam(PERM_ADMIN);
 				if(!teamAdminOp.isPresent()) {
-					System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
+					System.err.println("El jugador " + player.getName() + " no ha sido aÃ±adido a ningun equipo.");
 					break;
 				}
 				Team teamAdmin = teamAdminOp.get();
@@ -100,7 +100,7 @@ public class BewomUser {
 			case PERM_LEVEL_VIP:
 				Optional<Team> teamVipOp = player.getScoreboard().getTeam(PERM_VIP);
 				if(!teamVipOp.isPresent()) {
-					System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
+					System.err.println("El jugador " + player.getName() + " no ha sido aÃ±adido a ningun equipo.");
 					break;
 				}
 				Team teamVip = teamVipOp.get();
@@ -114,7 +114,7 @@ public class BewomUser {
 			case PERM_LEVEL_USER:
 				Optional<Team> teamUserOp = player.getScoreboard().getTeam(PERM_USER);
 				if(!teamUserOp.isPresent()) {
-					System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
+					System.err.println("El jugador " + player.getName() + " no ha sido aÃ±adido a ningun equipo.");
 					break;
 				}
 				Team teamUser = teamUserOp.get();

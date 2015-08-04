@@ -13,7 +13,7 @@ public class CommandRepair implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args)
 			throws CommandException {
 		
-		src.sendMessage(Texts.of("Este comando no est· habilitado."));
+		src.sendMessage(Texts.of("Este comando no est√° habilitado."));
 		return CommandResult.empty();
 		
 //		if(src instanceof Player) {

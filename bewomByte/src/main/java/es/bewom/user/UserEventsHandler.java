@@ -55,8 +55,8 @@ public class UserEventsHandler {
 			//Welcome message.
 			player.sendTitle(
 				Titles.builder()
-					.title(Texts.of(TextColors.DARK_AQUA, "¡Bienvenido " + player.getName() + "!"))
-					.subtitle(Texts.of(TextColors.WHITE, "¡Hazte con todos!"))
+					.title(Texts.of(TextColors.DARK_AQUA, "Â¡Bienvenido " + player.getName() + "!"))
+					.subtitle(Texts.of(TextColors.WHITE, "Â¡Hazte con todos!"))
 					.stay(120)
 					.build());
 			user.updatePermissions();
@@ -66,7 +66,7 @@ public class UserEventsHandler {
 			
 			player.sendTitle(
 				Titles.builder()
-					.title(Texts.of(TextColors.DARK_RED, "¡Verifica tu correo!"))
+					.title(Texts.of(TextColors.DARK_RED, "Â¡Verifica tu correo!"))
 					.subtitle(Texts.of(TextColors.WHITE, "Si no encuentras el correo, busca en spam..."))
 					.stay(72000)
 					.build());
