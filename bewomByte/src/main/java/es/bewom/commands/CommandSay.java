@@ -34,7 +34,15 @@ public class CommandSay implements CommandExecutor {
 				String message = args.<String>getOne("mensaje").get();
 				Collection<Player> players = game.getServer().getOnlinePlayers();
 				for(Player player : players) {
-					player.sendMessage(ChatTypes.SYSTEM, Texts.of(TextColors.GREEN, "/", TextStyles.OBFUSCATED, "K", TextStyles.RESET, "/", TextStyles.BOLD, "WOM", TextStyles.RESET, TextColors.GREEN, " < ", message));
+					player.sendMessage(ChatTypes.SYSTEM, Texts.of(
+							TextColors.WHITE, "/", 
+							TextColors.DARK_RED,
+							TextStyles.OBFUSCATED, "K",
+							TextColors.WHITE,
+							TextStyles.RESET, "/", 
+							TextStyles.BOLD, TextColors.DARK_RED, "WOM", 
+							TextStyles.RESET, TextColors.WHITE, " < ",
+							TextStyles.BOLD, TextColors.DARK_RED, message));
 				}
 				return CommandResult.success();
 			}

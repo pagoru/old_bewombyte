@@ -5,14 +5,18 @@ import java.net.URL;
 import java.util.UUID;
 
 import org.spongepowered.api.Game;
+import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.data.manipulator.tileentity.SignData;
 import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.entity.player.gamemode.GameModes;
 import org.spongepowered.api.event.Subscribe;
+import org.spongepowered.api.event.entity.player.PlayerChangeBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerChatEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
+import org.spongepowered.api.event.entity.player.PlayerInteractEvent;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.event.entity.player.PlayerMoveEvent;
 import org.spongepowered.api.event.entity.player.PlayerQuitEvent;
@@ -22,9 +26,12 @@ import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.title.Titles;
+import org.spongepowered.api.world.Location;
 
 import com.google.common.base.Optional;
 
+import es.bewom.centrospokemon.CentroManager;
+import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.user.messages.BewomMessageSink;
 
 public class UserEventsHandler {
@@ -55,7 +62,7 @@ public class UserEventsHandler {
 			//Welcome message.
 			player.sendTitle(
 				Titles.builder()
-					.title(Texts.of(TextColors.DARK_AQUA, "¡Bienvenido " + player.getName() + "!"))
+					.title(Texts.of(TextColors.DARK_AQUA, "¡Bienvenid@!"))
 					.subtitle(Texts.of(TextColors.WHITE, "¡Hazte con todos!"))
 					.stay(120)
 					.build());
@@ -148,6 +155,12 @@ public class UserEventsHandler {
 	@Subscribe
 	public void onUserRespawn(PlayerRespawnEvent event) {
 		Player player = event.getUser();
+		CentroPokemon cp = CentroManager.getClosest(player.getLocation(), player.getWorld().getName());
+		if(cp == null) {
+			return;
+		}
+		Location location = new Location(player.getWorld().getLocation(cp.getVector()).getExtent(), cp.getVector().add(0.5, 0, 0.5));
+		event.setNewRespawnLocation(location);
 	}
 	
 	/**
@@ -172,6 +185,29 @@ public class UserEventsHandler {
 			data.reset();
 			data.setLine(1, Texts.of(TextColors.BLUE, "Hello World!"));
 			entity.offer(data);
+		}
+		
+	}
+	@Subscribe
+	public void onUserInteract(PlayerInteractEvent event){
+		if(event.getInteractionType().equals(EntityInteractionTypes.USE)){
+			
+			event.getEntity().sendMessage(Texts.of("use"));
+			event.setCancelled(true);
+			
+			BlockType b = ((TileEntity) event).getBlock().getBlockType();
+			if(b == BlockTypes.WOODEN_DOOR
+					|| b == BlockTypes.ACACIA_DOOR
+					|| b == BlockTypes.BIRCH_DOOR
+					|| b == BlockTypes.DARK_OAK_DOOR
+					|| b == BlockTypes.JUNGLE_DOOR
+					|| b == BlockTypes.SPRUCE_DOOR){
+				
+				event.getEntity().sendMessage(Texts.of("Door"));
+				event.setCancelled(true);
+				
+			}
+			
 		}
 		
 	}
