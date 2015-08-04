@@ -166,8 +166,10 @@ public class WarpManager {
 					Warp[].class);
 
 			ArrayList<Warp> warpsList = new ArrayList<>();
-			for (Warp warp : warpsArray) {
-				warpsList.add(warp);
+			if(!warpsList.isEmpty()) {
+				for (Warp warp : warpsArray) {
+					warpsList.add(warp);
+				}
 			}
 
 			WarpManager.warps = warpsList;

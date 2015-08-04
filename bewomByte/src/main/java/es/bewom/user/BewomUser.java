@@ -4,10 +4,14 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.entity.player.gamemode.GameModes;
+import org.spongepowered.api.scoreboard.Team;
 
 import com.google.common.base.Optional;
 
 import es.bewom.BewomByte;
+import es.bewom.util.Ran;
+import es.bewom.util.mysql.MySQL;
 
 /**
  * 
@@ -16,13 +20,19 @@ import es.bewom.BewomByte;
  */
 public class BewomUser {
 	
+	public static final String PERM_ADMIN = "admin";
+	public static final String PERM_VIP = "vip";
+	public static final String PERM_USER = "miembro";
+	
 	public static final int PERM_LEVEL_ADMIN = 3;
 	public static final int PERM_LEVEL_VIP = 2;
 	public static final int PERM_LEVEL_USER = 1;
 	
-	private static HashMap<UUID, BewomUser> onlineUsers = new HashMap<>();
-	
 	private static BewomByte plugin;
+	
+	public MySQL m = new MySQL();
+	
+	static HashMap<UUID, BewomUser> onlineUsers = new HashMap<>();
 	
 	private Player player;
 	private UUID uuid;
@@ -33,6 +43,7 @@ public class BewomUser {
 	private int permissionLevel;
 	private int warnings;
 	
+	private String registerLink = "http://bewomdev.darkaqua.net/crear/";
 	private int registration = -1;
 	
 	/**
@@ -40,12 +51,88 @@ public class BewomUser {
 	 * @param player to create the {@link BewomUser} from.
 	 */
 	public BewomUser(Player player) {
+		
 		this.player = player;
 		this.uuid = player.getUniqueId();
 		lastMove = plugin.getGame().getServer().getRunningTimeTicks();
 		registration = checkWebsiteRegistration();
 		permissionLevel = checkPermissionLevel();
 		warnings = checkNumberOfWarnings();
+		
+		String hash = (String) m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueId() + "'", "hash");
+		if(hash != null){
+			registerLink += hash;
+		}
+		
+	}
+	
+	public void updatePermissions(){
+		
+		String perm = (String) m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + player.getUniqueId() + "'", "type");
+		
+		if(perm != null){
+		
+			if(perm.equals(BewomUser.PERM_ADMIN)){
+				setPermissionLevel(3);		
+			} else if (perm.equals(BewomUser.PERM_VIP)){
+				setPermissionLevel(2);
+			} else if(perm.equals(BewomUser.PERM_USER)){
+				setPermissionLevel(1);
+			}
+			
+			player.offer(player.getGameModeData().setGameMode(GameModes.SURVIVAL));
+			switch(permissionLevel) {
+			case PERM_LEVEL_ADMIN:
+				player.offer(player.getGameModeData().setGameMode(GameModes.CREATIVE));
+				Optional<Team> teamAdminOp = player.getScoreboard().getTeam(PERM_ADMIN);
+				if(!teamAdminOp.isPresent()) {
+					System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
+					break;
+				}
+				Team teamAdmin = teamAdminOp.get();
+				if(!teamAdmin.getUsers().contains(player)){
+					for(Team team : player.getScoreboard().getTeams()) {
+						team.removeUser(player);
+					}
+					teamAdmin.addUser(player);
+				}
+				break;
+			case PERM_LEVEL_VIP:
+				Optional<Team> teamVipOp = player.getScoreboard().getTeam(PERM_VIP);
+				if(!teamVipOp.isPresent()) {
+					System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
+					break;
+				}
+				Team teamVip = teamVipOp.get();
+				if(!teamVip.getUsers().contains(player)){
+					for(Team team : player.getScoreboard().getTeams()) {
+						team.removeUser(player);
+					}
+					teamVip.addUser(player);
+				}
+				break;
+			case PERM_LEVEL_USER:
+				Optional<Team> teamUserOp = player.getScoreboard().getTeam(PERM_USER);
+				if(!teamUserOp.isPresent()) {
+					System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
+					break;
+				}
+				Team teamUser = teamUserOp.get();
+				if(!teamUser.getUsers().contains(player)){
+					for(Team team : player.getScoreboard().getTeams()) {
+						team.removeUser(player);
+					}
+					teamUser.addUser(player);
+				}
+				break;
+			}
+			
+		} else {
+			
+			setPermissionLevel(1);
+			
+		}
+		
 	}
 
 	/**
@@ -96,6 +183,15 @@ public class BewomUser {
 		return registration;
 	}
 	
+	public void createHashFirstTime(){
+		Ran r = new Ran();
+		String h = r.next(32);
+		
+		registerLink += h;
+		
+		m.executeQuery("INSERT INTO `crear`(`uuid`, `user`, `hash`) VALUES ('" + player.getUniqueId() + "', '" + player.getName() + "', '" + h + "')", null);
+	}
+	
 	/**
 	 * Runs when player joins.
 	 * Grabs {@link WebRegistration} value from web server.
@@ -103,12 +199,23 @@ public class BewomUser {
 	 */
 	private int checkWebsiteRegistration() {
 		//TODO: Check Registration in the database.
-		return WebRegistration.VALID;
+				
+		String perm = (String) m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueId() + "'", "hash");
+		if(perm != null){
+			boolean perm2 = (boolean) m.executeQuery("SELECT * FROM `users_info` WHERE `uuid`='" + player.getUniqueId() + "'", "active");
+			if(perm2){
+				return WebRegistration.VALID;
+			} else {
+				return WebRegistration.NOT_VALID;
+			}
+		}
+		
+		return WebRegistration.NOT_REGISTERED;
 	}
 	
 	private int checkPermissionLevel() {
-		//TODO: Check Permission level in the database.
-		return 1;
+		updatePermissions();
+		return this.permissionLevel;
 	}
 	
 	private int checkNumberOfWarnings() {
@@ -121,6 +228,22 @@ public class BewomUser {
 	 * This is provided by the database connected to the forums.
 	 * @return int - The permission level.
 	 */
+	
+	public String getPermissionType(){
+		
+		switch (permissionLevel) {
+		case PERM_LEVEL_ADMIN:
+			return PERM_ADMIN;
+		case PERM_LEVEL_VIP:
+			return PERM_VIP;
+		case PERM_LEVEL_USER:
+			return PERM_USER;
+		}
+		
+		return null;
+		
+	}
+	
 	public int getPermissionLevel() {
 		return permissionLevel;
 	}
@@ -130,7 +253,8 @@ public class BewomUser {
 			return Optional.of("Este grupo no existe.");
 		}
 		this.permissionLevel = level;
-		//TODO: Save to database.
+		//TODO: Save to database.	
+		m.executeQuery("UPDATE `users` SET `type`='" + getPermissionType() + "' WHERE `uuid`='" + player.getUniqueId() + "'", null);	
 		return Optional.absent();
 	}
 	
@@ -181,6 +305,14 @@ public class BewomUser {
 	 */
 	public static void setGame(BewomByte plugin) {
 		BewomUser.plugin = plugin;
+	}
+
+	public String getRegisterLink() {
+		return registerLink;
+	}
+
+	public void setRegisterLink(String registerLink) {
+		this.registerLink = registerLink;
 	}
 	
 }

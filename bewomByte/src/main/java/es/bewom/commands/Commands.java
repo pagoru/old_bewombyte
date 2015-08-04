@@ -258,10 +258,10 @@ public class Commands {
 		game.getCommandDispatcher().register(plugin, cmdSpec_spawn, "spawn");
 		game.getCommandDispatcher().register(plugin, cmdSpec_setSpawn, "setspawn");
 		game.getCommandDispatcher().register(plugin, cmdSpec_world, "world");
-		game.getCommandDispatcher().register(plugin, cmdSpec_level, "nivel", "permisos");
+		game.getCommandDispatcher().register(plugin, cmdSpec_level, "perms", "lvl", "perm");
 		game.getCommandDispatcher().register(plugin, cmdSpec_say, "say", "broadcast");
 		
-		game.getCommandDispatcher().register(plugin, new CommandGM(), "gm");
+		game.getCommandDispatcher().register(plugin, new CommandGM(), "gm", "gamemode");
 		game.getCommandDispatcher().register(plugin, new CommandInv(game), "inv", "invsee");
 		
 	}

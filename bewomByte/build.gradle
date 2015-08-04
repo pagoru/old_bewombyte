@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 sourceCompatibility = 1.8
-version = '0.0a'
+version = '0.0c'
 jar {
     manifest {
         attributes 'Implementation-Title': 'Gradle Quickstart',
@@ -20,6 +20,7 @@ repositories {
 
 dependencies {
     compile "org.spongepowered:spongeapi:2.1-SNAPSHOT"
+    compile 'mysql:mysql-connector-java:5.1.36'
 }
 
 test {
@@ -33,3 +34,4 @@ uploadArchives {
        }
     }
 }
+

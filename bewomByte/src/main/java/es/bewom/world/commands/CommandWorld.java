@@ -16,8 +16,7 @@ import es.bewom.user.BewomUser;
 public class CommandWorld implements CommandExecutor {
 
 	@Override
-	public CommandResult execute(CommandSource src, CommandContext args)
-			throws CommandException {
+	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		
 		Player player;
 		

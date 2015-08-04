@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.state.InitializationEvent;
-import org.spongepowered.api.event.state.ServerStartingEvent;
 import org.spongepowered.api.event.state.ServerStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 
@@ -17,7 +16,6 @@ import es.bewom.teleport.TPManager;
 import es.bewom.user.BewomUser;
 import es.bewom.user.UserEventsHandler;
 import es.bewom.warps.WarpManager;
-import es.bewom.world.WorldManager;
 
 /**
  * 
@@ -26,7 +24,7 @@ import es.bewom.world.WorldManager;
  *
  */
 
-@Plugin(id="bewomByte", name="bewom byte", version="0.0a")
+@Plugin(id="bewomByte", name="bewom byte", version="0.0b")
 public class BewomByte {
 	
 	@Inject
@@ -59,8 +57,8 @@ public class BewomByte {
 		WarpManager.load();
 		CentroManager.init(this);
 		
+		game.getEventManager().register(this, new UserEventsHandler(game));
 		game.getEventManager().register(this, new WarpManager());
-		game.getEventManager().register(this, new UserEventsHandler());
 		game.getEventManager().register(this, new CentroManager());
 		
 	}

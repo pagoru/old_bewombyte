@@ -1,6 +1,7 @@
 package es.bewom.user.commands;
 
 import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandException;
@@ -15,19 +16,29 @@ import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
 public class CommandSetLevel implements CommandExecutor {
-
+	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args)
 			throws CommandException {
-
+		
+		boolean permissions = false;
+		
 		if (src instanceof Player) {
 			BewomUser user = BewomUser.getUser((Player) src);
-			if (user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) {
-				src.sendMessage(TextMessages.NO_PERMISSIONS);
-				return CommandResult.empty();
+			if (user.getPermissionLevel() >= BewomUser.PERM_LEVEL_ADMIN) {
+				permissions = true;
 			}
 		}
-
+		
+		if(src.hasPermission("ghjf") && permissions == false) {
+			permissions = true;
+		}
+		
+		if(permissions == false) {
+			src.sendMessage(TextMessages.NO_PERMISSIONS);
+			return CommandResult.empty();
+		}
+		
 		Optional<Player> toChangeOp = args.<Player> getOne("jugador");
 		Optional<Integer> levelOp = args.<Integer> getOne("nivel");
 
@@ -43,6 +54,14 @@ public class CommandSetLevel implements CommandExecutor {
 				src.sendMessage(Texts.of(error));
 				return CommandResult.empty();
 			}
+			
+			for(Team team : toChange.getScoreboard().getTeams()) {
+				team.removeUser(toChange);
+			}
+			
+			BewomUser p = BewomUser.getUser(toChange);
+			p.setPermissionLevel(level);
+			p.updatePermissions();		
 
 			src.sendMessage(Texts.of(TextColors.RED, toChange.getName(), " ahora es nivel de permisos ", level));
 			return CommandResult.success();
