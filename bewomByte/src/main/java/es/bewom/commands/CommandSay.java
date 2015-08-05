@@ -14,7 +14,9 @@ import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.command.args.CommandContext;
 import org.spongepowered.api.util.command.spec.CommandExecutor;
 
+import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
+import es.bewom.user.WebRegistration;
 
 public class CommandSay implements CommandExecutor {
 	
@@ -34,15 +36,11 @@ public class CommandSay implements CommandExecutor {
 				String message = args.<String>getOne("mensaje").get();
 				Collection<Player> players = game.getServer().getOnlinePlayers();
 				for(Player player : players) {
-					player.sendMessage(ChatTypes.SYSTEM, Texts.of(
-							TextColors.WHITE, "/", 
-							TextColors.DARK_RED,
-							TextStyles.OBFUSCATED, "K",
-							TextColors.WHITE,
-							TextStyles.RESET, "/", 
-							TextStyles.BOLD, TextColors.DARK_RED, "WOM", 
-							TextStyles.RESET, TextColors.WHITE, " < ",
-							TextStyles.BOLD, TextColors.DARK_RED, message));
+					if(BewomUser.getUser(player).getRegistration() == WebRegistration.VALID){
+						player.sendMessage(ChatTypes.SYSTEM, Texts.of(
+								TextMessages.BROADCAST,
+								TextStyles.BOLD, TextColors.DARK_RED, message));
+					}
 				}
 				return CommandResult.success();
 			}

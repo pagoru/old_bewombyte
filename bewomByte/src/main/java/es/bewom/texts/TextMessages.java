@@ -3,6 +3,7 @@ package es.bewom.texts;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 public class TextMessages {
 	
@@ -18,5 +19,13 @@ public class TextMessages {
 	public static final Text LOGIN_SUCCESS = Texts.of(TextColors.RED, "Bienvenido a ", TextColors.GOLD, "BEWOM", TextColors.RED, ".");
 	
 	public static final Text WORLD_NOT_FOUND = Texts.of(TextColors.RED, "No se ha encontrado el mundo especificado.");
+	
+	public static final Text BROADCAST = Texts.of(TextColors.WHITE, "/", 
+			TextColors.DARK_RED,
+			TextStyles.OBFUSCATED, "K",
+			TextColors.WHITE,
+			TextStyles.RESET, "/", 
+			TextStyles.BOLD, TextColors.DARK_RED, "WOM", 
+			TextStyles.RESET, TextColors.WHITE, " < ");
 	
 }
