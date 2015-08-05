@@ -2,6 +2,8 @@ package es.bewom.user;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.UUID;
 
 import org.spongepowered.api.Game;
@@ -56,14 +58,14 @@ public class UserEventsHandler {
 		BewomUser.addUser(user);
 		
 		//TODO: set messages for each type of join event
-		
+		 
 		if (user.getRegistration() == WebRegistration.VALID) {
 			//Player is allowed into the server.
 			//Welcome message.
 			player.sendTitle(
 				Titles.builder()
-					.title(Texts.of(TextColors.DARK_AQUA, "¡Bienvenid@!"))
-					.subtitle(Texts.of(TextColors.WHITE, "¡Hazte con todos!"))
+					.title(Texts.of(TextColors.DARK_AQUA, "Bienvenid@!"))
+					.subtitle(Texts.of(TextColors.WHITE, "Hazte con todos..."))
 					.stay(120)
 					.build());
 			user.updatePermissions();
@@ -73,7 +75,7 @@ public class UserEventsHandler {
 			
 			player.sendTitle(
 				Titles.builder()
-					.title(Texts.of(TextColors.DARK_RED, "¡Verifica tu correo!"))
+					.title(Texts.of(TextColors.DARK_RED, "Verifica tu correo!"))
 					.subtitle(Texts.of(TextColors.WHITE, "Si no encuentras el correo, busca en spam..."))
 					.stay(72000)
 					.build());
@@ -110,6 +112,7 @@ public class UserEventsHandler {
 	
 	@Subscribe
 	public void onUserChat(PlayerChatEvent event) {
+		
 		BewomUser b = BewomUser.getUser(event.getUser());
 		
 		if (b.getRegistration() == WebRegistration.VALID) {
@@ -117,10 +120,21 @@ public class UserEventsHandler {
 			//Welcome message.
 			BewomMessageSink sink = new BewomMessageSink();
 			Text newMessage = sink.transformMessage(event.getSource(), event.getMessage());
-			event.setNewMessage(newMessage);
-		} else {
-			event.setCancelled(true);
+			
+			game.getServer().getOnlinePlayers();
+			
+			Collection<Player> src = game.getServer().getOnlinePlayers();
+			
+			for(Player p : src) {
+				
+				if(BewomUser.getUser(p).getRegistration() == WebRegistration.VALID){
+					p.sendMessage(newMessage);					
+				}
+				
+			}
 		}
+		
+		event.setCancelled(true);
 		
 	}
 
@@ -185,29 +199,6 @@ public class UserEventsHandler {
 			data.reset();
 			data.setLine(1, Texts.of(TextColors.BLUE, "Hello World!"));
 			entity.offer(data);
-		}
-		
-	}
-	@Subscribe
-	public void onUserInteract(PlayerInteractEvent event){
-		if(event.getInteractionType().equals(EntityInteractionTypes.USE)){
-			
-			event.getEntity().sendMessage(Texts.of("use"));
-			event.setCancelled(true);
-			
-			BlockType b = ((TileEntity) event).getBlock().getBlockType();
-			if(b == BlockTypes.WOODEN_DOOR
-					|| b == BlockTypes.ACACIA_DOOR
-					|| b == BlockTypes.BIRCH_DOOR
-					|| b == BlockTypes.DARK_OAK_DOOR
-					|| b == BlockTypes.JUNGLE_DOOR
-					|| b == BlockTypes.SPRUCE_DOOR){
-				
-				event.getEntity().sendMessage(Texts.of("Door"));
-				event.setCancelled(true);
-				
-			}
-			
 		}
 		
 	}

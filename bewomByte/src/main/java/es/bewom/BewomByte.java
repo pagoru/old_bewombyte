@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.commands.Commands;
+import es.bewom.p.P;
 import es.bewom.spawn.SpawnManager;
 import es.bewom.teleport.TPManager;
 import es.bewom.user.BewomUser;
@@ -28,7 +29,7 @@ import es.bewom.warps.WarpManager;
 public class BewomByte {
 	
 	@Inject
-	Game game;
+	public static Game game;
 	
 	@Inject
 	Logger log;
@@ -60,6 +61,7 @@ public class BewomByte {
 		game.getEventManager().register(this, new UserEventsHandler(game));
 		game.getEventManager().register(this, new WarpManager());
 		game.getEventManager().register(this, new CentroManager());
+		game.getEventManager().register(this, new P(game));
 		
 	}
 	
