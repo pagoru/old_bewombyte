@@ -61,7 +61,6 @@ public class BewomByte {
 		game.getEventManager().register(this, new UserEventsHandler(game));
 		game.getEventManager().register(this, new WarpManager());
 		game.getEventManager().register(this, new CentroManager());
-		game.getEventManager().register(this, new P(game));
 		
 	}
 	

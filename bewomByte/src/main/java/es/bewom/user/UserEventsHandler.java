@@ -15,12 +15,14 @@ import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.entity.player.gamemode.GameModes;
 import org.spongepowered.api.event.Subscribe;
+import org.spongepowered.api.event.entity.player.PlayerBreakBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerChangeBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerChatEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractEvent;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.event.entity.player.PlayerMoveEvent;
+import org.spongepowered.api.event.entity.player.PlayerPlaceBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerQuitEvent;
 import org.spongepowered.api.event.entity.player.PlayerRespawnEvent;
 import org.spongepowered.api.text.Text;
@@ -34,6 +36,7 @@ import com.google.common.base.Optional;
 
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
+import es.bewom.p.P;
 import es.bewom.user.messages.BewomMessageSink;
 
 public class UserEventsHandler {
@@ -177,29 +180,24 @@ public class UserEventsHandler {
 		event.setNewRespawnLocation(location);
 	}
 	
-	/**
-	 * Event triggered when a player right clicks a sign. 
-	 * @param event
-	 */
 	@Subscribe
-	public void onUserClickSign(PlayerInteractBlockEvent event)	 {
+	public void on(PlayerInteractBlockEvent event){
 		
-		if(!event.getInteractionType().equals(EntityInteractionTypes.USE)) return;
+		P.on(game, event);
 		
-		Optional<TileEntity> entityOp = event.getBlock().getTileEntity();
+	}
+	
+	@Subscribe
+	public void on(PlayerPlaceBlockEvent event){
 		
-		if(!entityOp.isPresent()) return;
+		DeniedBlocks.on(game, event);
 		
-		TileEntity entity = entityOp.get();
+	}
+	
+	@Subscribe
+	public void on(PlayerBreakBlockEvent event){
 		
-		Optional<SignData> dataOp = entity.getOrCreate(SignData.class);
-		
-		if(dataOp.isPresent()) {
-			SignData data = dataOp.get();
-			data.reset();
-			data.setLine(1, Texts.of(TextColors.BLUE, "Hello World!"));
-			entity.offer(data);
-		}
+		P.on(game, event);
 		
 	}
 	

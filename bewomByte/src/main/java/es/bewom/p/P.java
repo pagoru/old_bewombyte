@@ -4,7 +4,6 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerBreakBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.text.Texts;
@@ -12,16 +11,7 @@ import org.spongepowered.api.world.Location;
 
 public class P {
 	
-	Game game;
-	
-	public P(Game g){
-		
-		game = g;
-		
-	}
-	
-	@Subscribe
-	public void on(PlayerInteractBlockEvent event){
+	public static void on(Game game, PlayerInteractBlockEvent event){
 		
 		Player p = (Player) event.getEntity();
 		BlockType b = (BlockType) event.getBlock().getBlockType();
@@ -50,8 +40,7 @@ public class P {
 		
 	}
 	
-	@Subscribe
-	public void on(PlayerBreakBlockEvent event){
+	public static void on(Game game, PlayerBreakBlockEvent event){
 		
 		Player p = (Player) event.getEntity();
 		double x = event.getBlock().getX();
