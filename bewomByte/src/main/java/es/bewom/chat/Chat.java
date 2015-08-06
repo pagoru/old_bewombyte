@@ -16,13 +16,17 @@ public class Chat {
 	private static Log l = new Log();
 	
 	public static void sendMessage(Player p, String m, Text t){
-				
-		Collection<Player> src = game.getServer().getOnlinePlayers();
 		
-		for(Player player : src) {
+		if(t != null){
 			
-			if(BewomUser.getUser(player).getRegistration() == WebRegistration.VALID){
-				player.sendMessage(t);					
+			Collection<Player> src = game.getServer().getOnlinePlayers();
+			
+			for(Player player : src) {
+				
+				if(BewomUser.getUser(player).getRegistration() == WebRegistration.VALID){
+					player.sendMessage(t);					
+				}
+				
 			}
 			
 		}

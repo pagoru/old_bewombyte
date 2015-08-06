@@ -21,6 +21,8 @@ public class Log {
 	
 	@Expose
 	private String day;
+	@Expose
+	private String hour;
 	private String extra = "";
 	@Expose
 	private ArrayList<Message> messages = new ArrayList<Message>();
@@ -32,6 +34,7 @@ public class Log {
 	public Log(){
 		Date d = new Date();
 		this.day = df.format(d);
+		this.hour = df2.format(d);
 		
 		File folder = new File("log");
 		
@@ -70,6 +73,7 @@ public class Log {
 		Date d = new Date();
 		if(!this.day.equals(df.format(d))){
 			
+			this.hour = df2.format(d);
 			this.extra = "";
 			messages.clear();
 			
