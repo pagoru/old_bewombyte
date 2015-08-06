@@ -26,6 +26,7 @@ import org.spongepowered.api.event.entity.player.PlayerPlaceBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerQuitEvent;
 import org.spongepowered.api.event.entity.player.PlayerRespawnEvent;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.Text.Literal;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
@@ -36,6 +37,7 @@ import com.google.common.base.Optional;
 
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
+import es.bewom.chat.Chat;
 import es.bewom.p.P;
 import es.bewom.user.messages.BewomMessageSink;
 
@@ -120,21 +122,10 @@ public class UserEventsHandler {
 		
 		if (b.getRegistration() == WebRegistration.VALID) {
 			//Player is allowed into the server.
-			//Welcome message.
+			//Welcome message.			
 			BewomMessageSink sink = new BewomMessageSink();
-			Text newMessage = sink.transformMessage(event.getSource(), event.getMessage());
-			
-			game.getServer().getOnlinePlayers();
-			
-			Collection<Player> src = game.getServer().getOnlinePlayers();
-			
-			for(Player p : src) {
-				
-				if(BewomUser.getUser(p).getRegistration() == WebRegistration.VALID){
-					p.sendMessage(newMessage);					
-				}
-				
-			}
+			Text newMessage = sink.transformMessage(event.getEntity(), event.getMessage());
+			Chat.sendMessage(event.getEntity(), Texts.toPlain(event.getUnformattedMessage()), newMessage);			
 		}
 		
 		event.setCancelled(true);
