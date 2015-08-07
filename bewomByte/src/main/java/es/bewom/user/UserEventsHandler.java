@@ -25,6 +25,7 @@ import org.spongepowered.api.event.entity.player.PlayerMoveEvent;
 import org.spongepowered.api.event.entity.player.PlayerPlaceBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerQuitEvent;
 import org.spongepowered.api.event.entity.player.PlayerRespawnEvent;
+import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Text.Literal;
 import org.spongepowered.api.text.Texts;
@@ -35,6 +36,7 @@ import org.spongepowered.api.world.Location;
 
 import com.google.common.base.Optional;
 
+import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.chat.Chat;
@@ -58,15 +60,19 @@ public class UserEventsHandler {
 	public void onUserJoin(PlayerJoinEvent event) {
 		
 		Player player = event.getUser();
+		CentroPokemon cp = CentroManager.getClosest(player.getLocation(), player.getWorld().getName());
+		if(cp == null) {
+			return;
+		}
+		Location location = new Location(BewomByte.game.getServer().getWorld(cp.world).get().getLocation(cp.getVector()).getExtent(), cp.getVector().add(0.5, 0, 0.5));
+		event.setLocation(location);
 		
 		BewomUser user = new BewomUser(player);
 		BewomUser.addUser(user);
 		
-		//TODO: set messages for each type of join event
-		 
+		Chat.sendMessage(player, "//login", null);
+		
 		if (user.getRegistration() == WebRegistration.VALID) {
-			//Player is allowed into the server.
-			//Welcome message.
 			player.sendTitle(
 				Titles.builder()
 					.title(Texts.of(TextColors.DARK_AQUA, "Bienvenid@!"))
@@ -75,9 +81,6 @@ public class UserEventsHandler {
 					.build());
 			user.updatePermissions();
 		} else if (user.getRegistration() == WebRegistration.NOT_VALID) {
-			//Player is not registered.
-			//Warning message.
-			
 			player.sendTitle(
 				Titles.builder()
 					.title(Texts.of(TextColors.DARK_RED, "Verifica tu correo!"))
@@ -88,8 +91,6 @@ public class UserEventsHandler {
 			player.offer(event.getUser().getGameModeData().setGameMode(GameModes.SPECTATOR));
 			
 		} else if (user.getRegistration() == WebRegistration.NOT_REGISTERED) {
-			//Player is not registered.
-			//Warning message.
 			user.createHashFirstTime();
 			
 			player.sendTitle(
@@ -101,14 +102,11 @@ public class UserEventsHandler {
 			try {
 				player.sendMessage(Texts.builder().append(Texts.of(TextColors.DARK_AQUA, "http://bewom.es/crear")).onClick(TextActions.openUrl(new URL(user.getRegisterLink()))).build());
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			event.getUser().offer(event.getUser().getGameModeData().setGameMode(GameModes.SPECTATOR));
 			
 		} else if (user.getRegistration() == WebRegistration.BANNED) {
-			//Player has been banned from the server.
-			//Go to forums message.
 			user.updatePermissions();
 			player.offer(player.getGameModeData().setGameMode(GameModes.SPECTATOR));
 		}
@@ -141,7 +139,19 @@ public class UserEventsHandler {
 	public void onUserQuit(PlayerQuitEvent event) {
 		Player player = event.getUser();
 		UUID uuid = player.getUniqueId();
-		BewomUser.remove(uuid);
+		BewomUser u = BewomUser.getUser(uuid);
+		if(u != null){
+			
+			if(!u.isLogout()){
+				
+				Chat.sendMessage(player, "//logout", null);
+				u.setLogout(true);
+				u.remove();
+				
+			}
+			
+		}
+		
 	}
 
 	/**
@@ -167,7 +177,7 @@ public class UserEventsHandler {
 		if(cp == null) {
 			return;
 		}
-		Location location = new Location(player.getWorld().getLocation(cp.getVector()).getExtent(), cp.getVector().add(0.5, 0, 0.5));
+		Location location = new Location(BewomByte.game.getServer().getWorld(cp.world).get().getLocation(cp.getVector()).getExtent(), cp.getVector().add(0.5, 0, 0.5));
 		event.setNewRespawnLocation(location);
 	}
 	

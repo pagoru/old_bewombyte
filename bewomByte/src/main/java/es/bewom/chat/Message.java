@@ -2,7 +2,11 @@ package es.bewom.chat;
 
 import java.util.UUID;
 
+import org.spongepowered.api.entity.player.Player;
+
 import com.google.gson.annotations.Expose;
+
+import es.bewom.BewomByte;
 
 public class Message {
 	
@@ -12,6 +16,14 @@ public class Message {
 	private String user;
 	@Expose
 	private UUID uuid;
+	@Expose
+	private double x;
+	@Expose
+	private double y;
+	@Expose
+	private double z;
+	@Expose
+	private String world;
 	@Expose
 	private String message;
 	
@@ -31,6 +43,11 @@ public class Message {
 	}
 	public Message uuid(UUID u){
 		this.uuid = u;
+		Player p = BewomByte.game.getServer().getPlayer(u).get();
+		this.x = p.getLocation().getX();
+		this.y = p.getLocation().getY();
+		this.z = p.getLocation().getZ();
+		this.world = p.getWorld().getName();
 		return this;
 	}
 	public Message message(String m){

@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
-import org.spongepowered.api.text.Text;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
@@ -36,7 +34,7 @@ public class Log {
 		this.day = df.format(d);
 		this.hour = df2.format(d);
 		
-		File folder = new File("log");
+		File folder = new File("bewom/log");
 		
 		if(!folder.exists()){
 			
@@ -83,7 +81,7 @@ public class Log {
 		String outLog = g.toJson(this);
 		
 		try {
-			FileWriter w = new FileWriter("log/" + day + extra + ".log");
+			FileWriter w = new FileWriter("bewom/log/" + day + extra + ".log");
 			w.write(outLog);
 			w.close();
 		} catch (IOException e) {

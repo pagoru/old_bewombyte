@@ -34,6 +34,8 @@ public class BewomUser {
 	
 	static HashMap<UUID, BewomUser> onlineUsers = new HashMap<>();
 	
+	private boolean logout = false;
+	
 	private Player player;
 	private UUID uuid;
 	
@@ -41,7 +43,6 @@ public class BewomUser {
 	private int lastMove;
 	
 	private int permissionLevel;
-	private int warnings;
 	
 	private String registerLink = "http://bewomdev.darkaqua.net/crear/";
 	private int registration = -1;
@@ -55,9 +56,8 @@ public class BewomUser {
 		this.player = player;
 		this.uuid = player.getUniqueId();
 		lastMove = plugin.getGame().getServer().getRunningTimeTicks();
-		registration = checkWebsiteRegistration();
-		permissionLevel = checkPermissionLevel();
-		warnings = checkNumberOfWarnings();
+		registration = checkWebsiteRegistration(); //WebRegistration.VALID
+		permissionLevel = checkPermissionLevel(); //PERM_LEVEL_USER
 		
 		String hash = (String) m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueId() + "'", "hash");
 		if(hash != null){
@@ -130,6 +130,14 @@ public class BewomUser {
 		} else {
 			
 			setPermissionLevel(1);
+			Optional<Team> teamUserOp = player.getScoreboard().getTeam(PERM_USER);
+			Team teamUser = teamUserOp.get();
+			if(!teamUser.getUsers().contains(player)){
+				for(Team team : player.getScoreboard().getTeams()) {
+					team.removeUser(player);
+				}
+				teamUser.addUser(player);
+			}
 			
 		}
 		
@@ -282,19 +290,20 @@ public class BewomUser {
 	 */
 	public static void addUser(BewomUser user) {
 		onlineUsers.put(user.getUUID(), user);
-		System.out.println(onlineUsers.keySet());
 	}
 	
 	/**
 	 * Removes user from the online users list.
 	 */
+	public void remove() {
+		onlineUsers.remove(this.uuid);
+	}
 	public static void remove(BewomUser user) {
 		onlineUsers.remove(user.getUUID());
 	}
 	
 	public static void remove(UUID uuid) {
 		onlineUsers.remove(uuid);
-		System.out.println(onlineUsers.keySet());
 	}
 	
 	/**
@@ -313,6 +322,14 @@ public class BewomUser {
 
 	public void setRegisterLink(String registerLink) {
 		this.registerLink = registerLink;
+	}
+
+	public boolean isLogout() {
+		return this.logout;
+	}
+
+	public void setLogout(boolean logout) {
+		this.logout = logout;
 	}
 	
 }
