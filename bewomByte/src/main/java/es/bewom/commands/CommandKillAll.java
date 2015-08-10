@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.spongepowered.api.Game;
-import org.spongepowered.api.data.manipulator.entity.HealthData;
+import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
@@ -48,7 +48,7 @@ public class CommandKillAll implements CommandExecutor {
 			Optional<HealthData> healthOp = player.getOrCreate(HealthData.class);
 			if(healthOp.isPresent()) {
 				HealthData health = healthOp.get();
-				health.setHealth(0);
+				health.health().set(0.0);
 				player.offer(health);
 			}
 		}

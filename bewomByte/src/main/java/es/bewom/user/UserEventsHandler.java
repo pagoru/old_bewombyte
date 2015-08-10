@@ -86,7 +86,7 @@ public class UserEventsHandler {
 					.stay(72000)
 					.build());
 			
-			player.offer(event.getUser().getGameModeData().setGameMode(GameModes.SPECTATOR));
+			player.offer(event.getUser().getGameModeData().type().set(GameModes.SPECTATOR));
 			
 		} else if (user.getRegistration() == WebRegistration.NOT_REGISTERED) {
 			user.createHashFirstTime();
@@ -102,11 +102,11 @@ public class UserEventsHandler {
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
-			event.getUser().offer(event.getUser().getGameModeData().setGameMode(GameModes.SPECTATOR));
+			event.getUser().offer(event.getUser().getGameModeData().type().set(GameModes.SPECTATOR));
 			
 		} else if (user.getRegistration() == WebRegistration.BANNED) {
 			user.updatePermissions();
-			player.offer(player.getGameModeData().setGameMode(GameModes.SPECTATOR));
+			player.offer(player.getGameModeData().type().set(GameModes.SPECTATOR));
 		}
 
 	}

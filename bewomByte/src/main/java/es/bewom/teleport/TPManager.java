@@ -17,7 +17,7 @@ public class TPManager implements Runnable {
 		
 		plugin.getGame()
 				.getScheduler()
-				.getTaskBuilder()
+				.createTaskBuilder()
 				.delay(5, TimeUnit.MINUTES)
 				.interval(5, TimeUnit.MINUTES)
 				.execute(new TPManager())

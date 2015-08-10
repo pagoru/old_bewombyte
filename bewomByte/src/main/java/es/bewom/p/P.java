@@ -20,10 +20,10 @@ public class P {
 	public static void on(Game game, PlayerInteractBlockEvent event){
 		
 		Player p = (Player) event.getEntity();
-		BlockType b = (BlockType) event.getBlock().getBlockType();
-		double x = event.getBlock().getX();
-		double y = event.getBlock().getY();
-		double z = event.getBlock().getZ();
+		BlockType b = (BlockType) event.getBlock().getType();
+		double x = event.getLocation().getX();
+		double y = event.getLocation().getY();
+		double z = event.getLocation().getZ();
 		World world = p.getWorld();
 		
 		if(b != null){
@@ -86,9 +86,9 @@ public class P {
 	public static void on(Game game, PlayerBreakBlockEvent event){
 		
 		Player p = (Player) event.getEntity();
-		double x = event.getBlock().getX();
-		double y = event.getBlock().getY();
-		double z = event.getBlock().getZ();
+		double x = event.getLocation().getX();
+		double y = event.getLocation().getY();
+		double z = event.getLocation().getZ();
 		
 		BlockType b = game.getServer().getWorld(p.getWorld().getUniqueId()).get().getBlock((int) x, (int) y + 1, (int) z).getType();
 		

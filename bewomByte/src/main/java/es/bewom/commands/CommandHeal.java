@@ -1,6 +1,6 @@
 package es.bewom.commands;
 
-import org.spongepowered.api.data.manipulator.entity.HealthData;
+import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
@@ -39,12 +39,12 @@ public class CommandHeal implements CommandExecutor {
 		if(toHealOp.isPresent()) {
 			Player toHeal = toHealOp.get();
 			HealthData data = toHeal.getOrCreate(HealthData.class).get();
-			data.setHealth(20);
+			data.health().set(20.0);
 			toHeal.offer(data);
 		} else {
 			Player toHeal = player;
 			HealthData data = toHeal.getOrCreate(HealthData.class).get();
-			data.setHealth(20);
+			data.health().set(20.0);
 			toHeal.offer(data);
 		}
 		

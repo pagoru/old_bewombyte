@@ -1,6 +1,6 @@
 package es.bewom.commands;
 
-import org.spongepowered.api.data.manipulator.entity.FlamableData;
+import org.spongepowered.api.data.manipulator.mutable.entity.FlammableData;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.command.CommandException;
@@ -41,11 +41,11 @@ public class CommandBurn implements CommandExecutor {
 			seconds = 1;
 		}
 		
-		Optional<FlamableData> data = toBurn.getOrCreate(FlamableData.class);
+		Optional<FlammableData> data = toBurn.getOrCreate(FlammableData.class);
 		
 		if(data.isPresent()) {
 			
-			FlamableData ignite = data.get();
+			FlammableData ignite = data.get();
 			
 			src.sendMessage(Texts.of(toBurn.getName() + " está ardiendo."));
 			

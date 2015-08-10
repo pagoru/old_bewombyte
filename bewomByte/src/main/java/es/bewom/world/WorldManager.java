@@ -33,23 +33,23 @@ public class WorldManager {
 	
 	private static void createWorld(String worldName) {
 		
-		WorldBuilder builder = game.getRegistry().getWorldBuilder();
-		
-		switch(worldName) {
-		case INTERIORES:
-			builder.generator(GeneratorTypes.FLAT);
-			break;
-		case RECURSOS:
-			builder.generator(GeneratorTypes.DEFAULT);
-			break;
-		default:
-			break;
-		}
-		
-		Optional<World> world = builder.build();
-		if(!world.isPresent()) {
-			System.out.println("AN ERROR OCURRED CREATING A WORLD (" + worldName + ")");
-		}
+//		WorldBuilder builder = game.getServer().;
+//		
+//		switch(worldName) {
+//		case INTERIORES:
+//			builder.generator(GeneratorTypes.FLAT);
+//			break;
+//		case RECURSOS:
+//			builder.generator(GeneratorTypes.DEFAULT);
+//			break;
+//		default:
+//			break;
+//		}
+//		
+//		Optional<World> world = builder.build();
+//		if(!world.isPresent()) {
+//			System.out.println("AN ERROR OCURRED CREATING A WORLD (" + worldName + ")");
+//		}
 		
 	}
 	

@@ -80,10 +80,10 @@ public class BewomUser {
 				setPermissionLevel(1);
 			}
 			
-			player.offer(player.getGameModeData().setGameMode(GameModes.SURVIVAL));
+			player.offer(player.getGameModeData().type().set(GameModes.SURVIVAL));
 			switch(permissionLevel) {
 			case PERM_LEVEL_ADMIN:
-				player.offer(player.getGameModeData().setGameMode(GameModes.CREATIVE));
+				player.offer(player.getGameModeData().type().set(GameModes.CREATIVE));
 				Optional<Team> teamAdminOp = player.getScoreboard().getTeam(PERM_ADMIN);
 				if(!teamAdminOp.isPresent()) {
 					System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");

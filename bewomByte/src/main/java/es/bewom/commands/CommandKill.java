@@ -1,6 +1,6 @@
 package es.bewom.commands;
 
-import org.spongepowered.api.data.manipulator.entity.HealthData;
+import org.spongepowered.api.data.manipulator.mutable.entity.HealthData;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
@@ -40,7 +40,7 @@ public class CommandKill implements CommandExecutor {
 		src.sendMessage(Texts.of(TextColors.RESET, "Has matado a ", TextColors.GREEN, toKill.getName()));
 		
 		HealthData health = toKill.getHealthData();
-		health.setHealth(0);
+		health.health().set(0.0);
 		toKill.offer(health);
 		
 		return CommandResult.success();

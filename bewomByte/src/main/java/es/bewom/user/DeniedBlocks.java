@@ -20,7 +20,7 @@ public class DeniedBlocks {
 	
 	public static void on(Game game, PlayerPlaceBlockEvent event){
 		
-		BlockType b = (BlockType) event.getBlock().getBlockType();
+		BlockType b = (BlockType) event.getBlock().getType();
 		
 		if(b != null){
 			

@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.TileEntityTypes;
-import org.spongepowered.api.data.manipulator.tileentity.SignData;
+import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.block.tileentity.SignChangeEvent;
@@ -189,9 +189,9 @@ public class WarpManager {
 		
 		SignData newData = event.getNewData();
 		
-		if(Texts.toPlain(newData.getLine(0)).equalsIgnoreCase("[WARP]")) {
+		if(Texts.toPlain(newData.lines().get(0)).equalsIgnoreCase("[WARP]")) {
 			
-			List<Text> lines = newData.getLines();
+			List<Text> lines = newData.lines().getAll();
 			String warpName = Texts.toPlain(lines.get(1));
 			Optional<Warp> warpOp = WarpManager.getWarpByName(warpName);
 			
@@ -208,7 +208,7 @@ public class WarpManager {
 			}
 			
 			for(int i = 0; i < 4; i++) {
-				newData.setLine(i, lines.get(i));
+				newData.lines().set(i, lines.get(i));
 			}
 			
 			event.setNewData(newData);
@@ -227,7 +227,7 @@ public class WarpManager {
 		if(event.getInteractionType() != EntityInteractionTypes.USE)
 			return;
 
-		Location block = event.getBlock();
+		Location block = event.getLocation();
 		
 		if(!block.getTileEntity().isPresent()) {
 			return;
@@ -245,7 +245,7 @@ public class WarpManager {
 			return;
 		}
 		
-		List<Text> lines = signData.get().getLines();
+		List<Text> lines = signData.get().lines().getAll();
 		if(!Texts.toPlain(lines.get(0)).equals("[WARP]")) {
 			return;
 		}

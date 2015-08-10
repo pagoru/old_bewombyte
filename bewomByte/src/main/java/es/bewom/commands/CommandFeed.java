@@ -1,6 +1,6 @@
 package es.bewom.commands;
 
-import org.spongepowered.api.data.manipulator.entity.FoodData;
+import org.spongepowered.api.data.manipulator.mutable.entity.FoodData;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
@@ -39,14 +39,14 @@ public class CommandFeed implements CommandExecutor {
 		if(toFeedOp.isPresent()) {
 			Player toFeed = toFeedOp.get();
 			FoodData data = toFeed.getOrCreate(FoodData.class).get();
-			data.setFoodLevel(20);
-			data.setSaturation(20);
+			data.saturation().set(20.0);
+			data.foodLevel().set(20);
 			toFeed.offer(data);
 		} else {
 			Player toFeed = player;
 			FoodData data = toFeed.getOrCreate(FoodData.class).get();
-			data.setFoodLevel(20);
-			data.setSaturation(20);
+			data.saturation().set(20.0);
+			data.foodLevel().set(20);
 			toFeed.offer(data);
 		}
 		
