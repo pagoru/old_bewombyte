@@ -44,7 +44,7 @@ public class BewomByte {
 		
 		game = e.getGame();
 		
-		log.debug("Loading BewomByte commands.");
+		log.debug("Loading BewomByte commands."); 
 		
 		Commands commands = new Commands(this, game);
 		commands.registerAll();
