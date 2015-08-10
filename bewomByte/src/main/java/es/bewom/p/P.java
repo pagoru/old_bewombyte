@@ -1,5 +1,8 @@
 package es.bewom.p;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.spongepowered.api.Game;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
@@ -7,15 +10,15 @@ import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.entity.player.PlayerBreakBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 public class P {
 	
 	public static boolean first = false;
 	public static boolean second = false;
+	public static int lastDoor = 0;
 	
-	public static Door d = new Door();
+	public static List<Door> doors = new ArrayList<Door>();
 	
 	public static void on(Game game, PlayerInteractBlockEvent event){
 		
@@ -30,39 +33,39 @@ public class P {
 			
 			if(equalsAnyWoodenDoorTypes(b)){
 				
-				p.sendMessage(Texts.of("Door!"));
-				
-				if(d != null){
-					if(d.setDoorPos(0).isSelected(x, y, z, world)){
-						event.setCancelled(true);
-						p.setLocation(d.setDoorPos(1).getLocation());
-					}
-					if(d.setDoorPos(1).isSelected(x, y, z, world)){
-						event.setCancelled(true);
-						p.setLocation(d.setDoorPos(0).getLocation());
+				if(doors != null){
+					for (Door d : doors) {
+						if(d.setDoorPos(0).isSelected(x, y, z, world)){
+							event.setCancelled(true);
+							p.setLocation(d.setDoorPos(1).getLocation());
+						}
+						if(d.setDoorPos(1).isSelected(x, y, z, world)){
+							event.setCancelled(true);
+							p.setLocation(d.setDoorPos(0).getLocation());
+						}
 					}
 				}
 				
 				if(second){
 					event.setCancelled(true);
-					BlockType doorW = game.getServer().getWorld(world.getUniqueId()).get().getBlock((int) x, (int) y + 1, (int) z).getType();
+					BlockType doorW = game.getServer().getWorld(world.getUniqueId()).get().getBlock((int) x, (int) y - 1, (int) z).getType();
 					if(equalsAnyWoodenDoorTypes(doorW)){
 						y -= 1;
 					}
-					d.setDoorPos(0).setLocation(x, y, z).setWorld(world);
+					doors.get(lastDoor).setDoorPos(0).setLocation(x, y, z).setWorld(world);
 					second = false;
-					p.sendMessage(Texts.of("Selected doors."));
+					p.sendMessage(Texts.of("Puertas seleccionadas."));
 				}
 				if(first){
 					event.setCancelled(true);
-					BlockType doorW = game.getServer().getWorld(world.getUniqueId()).get().getBlock((int) x, (int) y + 1, (int) z).getType();
+					BlockType doorW = game.getServer().getWorld(world.getUniqueId()).get().getBlock((int) x, (int) y - 1, (int) z).getType();
 					if(equalsAnyWoodenDoorTypes(doorW)){
 						y -= 1;
 					}
-					d.setDoorPos(1).setLocation(x, y, z).setWorld(world);
+					doors.get(lastDoor).setDoorPos(1).setLocation(x, y, z).setWorld(world);
 					first = false;
 					second = true;
-					p.sendMessage(Texts.of("Select second door."));
+					p.sendMessage(Texts.of("Selecciona la segunda puerta."));
 				}
 				
 			}

@@ -1,12 +1,7 @@
 package es.bewom.world;
 
-import java.util.Collection;
-import java.util.HashMap;
-
 import org.spongepowered.api.Game;
-import org.spongepowered.api.world.GeneratorTypes;
 import org.spongepowered.api.world.World;
-import org.spongepowered.api.world.WorldBuilder;
 
 import com.google.common.base.Optional;
 

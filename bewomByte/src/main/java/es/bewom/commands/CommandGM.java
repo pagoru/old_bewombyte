@@ -3,7 +3,6 @@ package es.bewom.commands;
 import java.util.Collections;
 import java.util.List;
 
-import org.spongepowered.api.data.value.BaseValue;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.entity.player.gamemode.GameMode;
 import org.spongepowered.api.entity.player.gamemode.GameModes;

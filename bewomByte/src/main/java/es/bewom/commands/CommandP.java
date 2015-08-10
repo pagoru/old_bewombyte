@@ -8,6 +8,7 @@ import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.command.args.CommandContext;
 import org.spongepowered.api.util.command.spec.CommandExecutor;
 
+import es.bewom.p.Door;
 import es.bewom.p.P;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
@@ -22,9 +23,10 @@ public class CommandP implements CommandExecutor {
 		
 		if(user.isAdmin()){
 			
-			player.sendMessage(Texts.of("Select first door."));
+			player.sendMessage(Texts.of("Selecciona la primera puerta."));
 			P.first = true;
-			
+			P.lastDoor = P.doors.size();
+			P.doors.add(new Door());
 			return CommandResult.success();
 			
 		}

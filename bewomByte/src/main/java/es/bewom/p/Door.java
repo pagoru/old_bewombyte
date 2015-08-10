@@ -25,7 +25,7 @@ public class Door {
 		return z;
 	}
 	public Location getLocation(){
-		return new Location(world[pos], x[pos], y[pos], z[pos]);
+		return new Location(world[pos], x[pos] + 0.5, y[pos], z[pos] + 0.5);
 	}
 	
 	public Door setDoorPos(int pos){

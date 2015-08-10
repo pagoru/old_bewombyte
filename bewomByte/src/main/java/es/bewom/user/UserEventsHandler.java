@@ -5,23 +5,13 @@ import java.net.URL;
 import java.util.UUID;
 
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.EntityType;
-import org.spongepowered.api.entity.EntityTypes;
-import org.spongepowered.api.entity.hanging.ItemFrame;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.entity.player.gamemode.GameModes;
 import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.entity.EntityInteractEntityEvent;
-import org.spongepowered.api.event.entity.living.human.HumanEvent;
-import org.spongepowered.api.event.entity.living.human.HumanInteractEntityEvent;
 import org.spongepowered.api.event.entity.player.PlayerBreakBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerChatEvent;
-import org.spongepowered.api.event.entity.player.PlayerDropItemEvent;
-import org.spongepowered.api.event.entity.player.PlayerEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractEntityEvent;
-import org.spongepowered.api.event.entity.player.PlayerInteractEvent;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.event.entity.player.PlayerMoveEvent;
 import org.spongepowered.api.event.entity.player.PlayerPlaceBlockEvent;
@@ -59,14 +49,15 @@ public class UserEventsHandler {
 		
 		Player player = event.getUser();
 		CentroPokemon cp = CentroManager.getClosest(player.getLocation(), player.getWorld().getName());
-		if(cp == null) {
-			return;
+		if(cp != null) {
+			Location location = new Location(BewomByte.game.getServer().getWorld(cp.world).get().getLocation(cp.getVector()).getExtent(), cp.getVector().add(0.5, 0, 0.5));
+			event.setLocation(location);
 		}
-		Location location = new Location(BewomByte.game.getServer().getWorld(cp.world).get().getLocation(cp.getVector()).getExtent(), cp.getVector().add(0.5, 0, 0.5));
-		event.setLocation(location);
 		
 		BewomUser user = new BewomUser(player);
 		BewomUser.addUser(user);
+		
+		System.out.println(user.getLastMove());
 		
 		Chat.sendMessage(player, "//login", null);
 		

@@ -18,6 +18,7 @@ import es.bewom.user.BewomUser;
 
 public class CommandSay implements CommandExecutor {
 	
+	@SuppressWarnings("unused")
 	private Game game;
 	
 	public CommandSay(Game game) {

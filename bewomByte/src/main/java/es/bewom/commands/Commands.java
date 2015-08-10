@@ -219,6 +219,11 @@ public class Commands {
 				.executor(new CommandP())
 				.build();
 		
+		CommandSpec cmdSpec_p = CommandSpec
+				.builder()
+				.executor(new CommandP())
+				.build();
+		
 		game.getCommandDispatcher().register(plugin, cmdSpec_kick, "kick");
 		game.getCommandDispatcher().register(plugin, cmdSpec_kill, "kill");
 		game.getCommandDispatcher().register(plugin, cmdSpec_killAll, "killall");
@@ -242,6 +247,7 @@ public class Commands {
 		game.getCommandDispatcher().register(plugin, cmdSpec_world, "world");
 		game.getCommandDispatcher().register(plugin, cmdSpec_level, "perms", "lvl", "perm");
 		game.getCommandDispatcher().register(plugin, cmdSpec_say, "say", "broadcast");
+		game.getCommandDispatcher().register(plugin, cmdSpec_p, "p");
 		game.getCommandDispatcher().register(plugin, cmdSpec_p, "p");
 		
 		game.getCommandDispatcher().register(plugin, new CommandGM(), "gm", "gamemode");

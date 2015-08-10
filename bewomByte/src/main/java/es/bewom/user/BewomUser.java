@@ -3,9 +3,11 @@ package es.bewom.user;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.entity.player.gamemode.GameModes;
 import org.spongepowered.api.scoreboard.Team;
+import org.spongepowered.api.text.Texts;
 
 import com.google.common.base.Optional;
 
@@ -80,13 +82,12 @@ public class BewomUser {
 				setPermissionLevel(1);
 			}
 			
-			player.offer(player.getGameModeData().type().set(GameModes.SURVIVAL));
+			player.offer(Keys.DISPLAY_NAME, Texts.of("ALMENDRUCO"));
 			switch(permissionLevel) {
 			case PERM_LEVEL_ADMIN:
-				player.offer(player.getGameModeData().type().set(GameModes.CREATIVE));
 				Optional<Team> teamAdminOp = player.getScoreboard().getTeam(PERM_ADMIN);
 				if(!teamAdminOp.isPresent()) {
-					System.err.println("El jugador " + player.getName() + " no ha sido aÃ±adido a ningun equipo.");
+					System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
 					break;
 				}
 				Team teamAdmin = teamAdminOp.get();
@@ -100,7 +101,7 @@ public class BewomUser {
 			case PERM_LEVEL_VIP:
 				Optional<Team> teamVipOp = player.getScoreboard().getTeam(PERM_VIP);
 				if(!teamVipOp.isPresent()) {
-					System.err.println("El jugador " + player.getName() + " no ha sido aÃ±adido a ningun equipo.");
+					System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
 					break;
 				}
 				Team teamVip = teamVipOp.get();
@@ -224,11 +225,6 @@ public class BewomUser {
 	private int checkPermissionLevel() {
 		updatePermissions();
 		return this.permissionLevel;
-	}
-	
-	private int checkNumberOfWarnings() {
-		//TODO: Check the number of warnings in the database.
-		return 0;
 	}
 	
 	public boolean isAdmin(){

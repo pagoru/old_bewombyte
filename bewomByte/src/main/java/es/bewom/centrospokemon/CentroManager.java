@@ -7,9 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.world.Location;
 
 import com.google.common.base.Optional;
@@ -114,8 +111,10 @@ public class CentroManager {
 			
 			centros.clear();
 			
-			for(CentroPokemon centro : centroArray) {
-				centros.add(centro);
+			if(centroArray != null){
+				for(CentroPokemon centro : centroArray) {
+					centros.add(centro);
+				}			
 			}
 			
 		} catch (IOException e) {
