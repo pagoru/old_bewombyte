@@ -24,11 +24,11 @@ import es.bewom.warps.WarpManager;
  *
  */
 
-@Plugin(id="bewomByte", name="bewom byte", version="0.0b")
+@Plugin(id="bewomByte", name="bewom byte")
 public class BewomByte {
 	
 	@Inject
-	Game game;
+	public static Game game;
 	
 	@Inject
 	Logger log;
@@ -59,7 +59,6 @@ public class BewomByte {
 		
 		game.getEventManager().register(this, new UserEventsHandler(game));
 		game.getEventManager().register(this, new WarpManager());
-		game.getEventManager().register(this, new CentroManager());
 		
 	}
 	

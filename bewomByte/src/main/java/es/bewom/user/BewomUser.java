@@ -34,6 +34,8 @@ public class BewomUser {
 	
 	static HashMap<UUID, BewomUser> onlineUsers = new HashMap<>();
 	
+	private boolean logout = false;
+	
 	private Player player;
 	private UUID uuid;
 	
@@ -41,7 +43,6 @@ public class BewomUser {
 	private int lastMove;
 	
 	private int permissionLevel;
-	private int warnings;
 	
 	private String registerLink = "http://bewomdev.darkaqua.net/crear/";
 	private int registration = -1;
@@ -55,9 +56,8 @@ public class BewomUser {
 		this.player = player;
 		this.uuid = player.getUniqueId();
 		lastMove = plugin.getGame().getServer().getRunningTimeTicks();
-		registration = checkWebsiteRegistration();
-		permissionLevel = checkPermissionLevel();
-		warnings = checkNumberOfWarnings();
+		registration = checkWebsiteRegistration(); //WebRegistration.VALID
+		permissionLevel = checkPermissionLevel(); //PERM_LEVEL_USER
 		
 		String hash = (String) m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueId() + "'", "hash");
 		if(hash != null){
@@ -86,7 +86,7 @@ public class BewomUser {
 				player.offer(player.getGameModeData().setGameMode(GameModes.CREATIVE));
 				Optional<Team> teamAdminOp = player.getScoreboard().getTeam(PERM_ADMIN);
 				if(!teamAdminOp.isPresent()) {
-					System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
+					System.err.println("El jugador " + player.getName() + " no ha sido aÃ±adido a ningun equipo.");
 					break;
 				}
 				Team teamAdmin = teamAdminOp.get();
@@ -100,7 +100,7 @@ public class BewomUser {
 			case PERM_LEVEL_VIP:
 				Optional<Team> teamVipOp = player.getScoreboard().getTeam(PERM_VIP);
 				if(!teamVipOp.isPresent()) {
-					System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
+					System.err.println("El jugador " + player.getName() + " no ha sido aÃ±adido a ningun equipo.");
 					break;
 				}
 				Team teamVip = teamVipOp.get();
@@ -114,7 +114,7 @@ public class BewomUser {
 			case PERM_LEVEL_USER:
 				Optional<Team> teamUserOp = player.getScoreboard().getTeam(PERM_USER);
 				if(!teamUserOp.isPresent()) {
-					System.err.println("El jugador " + player.getName() + " no ha sido añadido a ningun equipo.");
+					System.err.println("El jugador " + player.getName() + " no ha sido aÃ±adido a ningun equipo.");
 					break;
 				}
 				Team teamUser = teamUserOp.get();
@@ -130,6 +130,14 @@ public class BewomUser {
 		} else {
 			
 			setPermissionLevel(1);
+			Optional<Team> teamUserOp = player.getScoreboard().getTeam(PERM_USER);
+			Team teamUser = teamUserOp.get();
+			if(!teamUser.getUsers().contains(player)){
+				for(Team team : player.getScoreboard().getTeams()) {
+					team.removeUser(player);
+				}
+				teamUser.addUser(player);
+			}
 			
 		}
 		
@@ -223,11 +231,26 @@ public class BewomUser {
 		return 0;
 	}
 	
-	/**
-	 * Returns the level of permissions this user has.
-	 * This is provided by the database connected to the forums.
-	 * @return int - The permission level.
-	 */
+	public boolean isAdmin(){
+		if(this.permissionLevel == PERM_LEVEL_ADMIN){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isVip(){
+		if(this.permissionLevel == PERM_LEVEL_VIP){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isUser(){
+		if(this.permissionLevel == PERM_LEVEL_USER){
+			return true;
+		}
+		return false;
+	}
 	
 	public String getPermissionType(){
 		
@@ -282,19 +305,20 @@ public class BewomUser {
 	 */
 	public static void addUser(BewomUser user) {
 		onlineUsers.put(user.getUUID(), user);
-		System.out.println(onlineUsers.keySet());
 	}
 	
 	/**
 	 * Removes user from the online users list.
 	 */
+	public void remove() {
+		onlineUsers.remove(this.uuid);
+	}
 	public static void remove(BewomUser user) {
 		onlineUsers.remove(user.getUUID());
 	}
 	
 	public static void remove(UUID uuid) {
 		onlineUsers.remove(uuid);
-		System.out.println(onlineUsers.keySet());
 	}
 	
 	/**
@@ -313,6 +337,14 @@ public class BewomUser {
 
 	public void setRegisterLink(String registerLink) {
 		this.registerLink = registerLink;
+	}
+
+	public boolean isLogout() {
+		return this.logout;
+	}
+
+	public void setLogout(boolean logout) {
+		this.logout = logout;
 	}
 	
 }

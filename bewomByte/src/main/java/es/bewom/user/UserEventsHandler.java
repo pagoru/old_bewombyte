@@ -5,16 +5,26 @@ import java.net.URL;
 import java.util.UUID;
 
 import org.spongepowered.api.Game;
-import org.spongepowered.api.block.tileentity.TileEntity;
-import org.spongepowered.api.data.manipulator.tileentity.SignData;
-import org.spongepowered.api.entity.EntityInteractionTypes;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityType;
+import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.hanging.ItemFrame;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.entity.player.gamemode.GameModes;
 import org.spongepowered.api.event.Subscribe;
+import org.spongepowered.api.event.entity.EntityInteractEntityEvent;
+import org.spongepowered.api.event.entity.living.human.HumanEvent;
+import org.spongepowered.api.event.entity.living.human.HumanInteractEntityEvent;
+import org.spongepowered.api.event.entity.player.PlayerBreakBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerChatEvent;
+import org.spongepowered.api.event.entity.player.PlayerDropItemEvent;
+import org.spongepowered.api.event.entity.player.PlayerEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
+import org.spongepowered.api.event.entity.player.PlayerInteractEntityEvent;
+import org.spongepowered.api.event.entity.player.PlayerInteractEvent;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.event.entity.player.PlayerMoveEvent;
+import org.spongepowered.api.event.entity.player.PlayerPlaceBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerQuitEvent;
 import org.spongepowered.api.event.entity.player.PlayerRespawnEvent;
 import org.spongepowered.api.text.Text;
@@ -22,9 +32,13 @@ import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.title.Titles;
+import org.spongepowered.api.world.Location;
 
-import com.google.common.base.Optional;
-
+import es.bewom.BewomByte;
+import es.bewom.centrospokemon.CentroManager;
+import es.bewom.centrospokemon.CentroPokemon;
+import es.bewom.chat.Chat;
+import es.bewom.p.P;
 import es.bewom.user.messages.BewomMessageSink;
 
 public class UserEventsHandler {
@@ -44,29 +58,30 @@ public class UserEventsHandler {
 	public void onUserJoin(PlayerJoinEvent event) {
 		
 		Player player = event.getUser();
+		CentroPokemon cp = CentroManager.getClosest(player.getLocation(), player.getWorld().getName());
+		if(cp == null) {
+			return;
+		}
+		Location location = new Location(BewomByte.game.getServer().getWorld(cp.world).get().getLocation(cp.getVector()).getExtent(), cp.getVector().add(0.5, 0, 0.5));
+		event.setLocation(location);
 		
 		BewomUser user = new BewomUser(player);
 		BewomUser.addUser(user);
 		
-		//TODO: set messages for each type of join event
+		Chat.sendMessage(player, "//login", null);
 		
 		if (user.getRegistration() == WebRegistration.VALID) {
-			//Player is allowed into the server.
-			//Welcome message.
 			player.sendTitle(
 				Titles.builder()
-					.title(Texts.of(TextColors.DARK_AQUA, "¡Bienvenido " + player.getName() + "!"))
-					.subtitle(Texts.of(TextColors.WHITE, "¡Hazte con todos!"))
+					.title(Texts.of(TextColors.DARK_AQUA, "Bienvenid@!"))
+					.subtitle(Texts.of(TextColors.WHITE, "Hazte con todos..."))
 					.stay(120)
 					.build());
 			user.updatePermissions();
 		} else if (user.getRegistration() == WebRegistration.NOT_VALID) {
-			//Player is not registered.
-			//Warning message.
-			
 			player.sendTitle(
 				Titles.builder()
-					.title(Texts.of(TextColors.DARK_RED, "¡Verifica tu correo!"))
+					.title(Texts.of(TextColors.DARK_RED, "Verifica tu correo!"))
 					.subtitle(Texts.of(TextColors.WHITE, "Si no encuentras el correo, busca en spam..."))
 					.stay(72000)
 					.build());
@@ -74,8 +89,6 @@ public class UserEventsHandler {
 			player.offer(event.getUser().getGameModeData().setGameMode(GameModes.SPECTATOR));
 			
 		} else if (user.getRegistration() == WebRegistration.NOT_REGISTERED) {
-			//Player is not registered.
-			//Warning message.
 			user.createHashFirstTime();
 			
 			player.sendTitle(
@@ -87,14 +100,11 @@ public class UserEventsHandler {
 			try {
 				player.sendMessage(Texts.builder().append(Texts.of(TextColors.DARK_AQUA, "http://bewom.es/crear")).onClick(TextActions.openUrl(new URL(user.getRegisterLink()))).build());
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			event.getUser().offer(event.getUser().getGameModeData().setGameMode(GameModes.SPECTATOR));
 			
 		} else if (user.getRegistration() == WebRegistration.BANNED) {
-			//Player has been banned from the server.
-			//Go to forums message.
 			user.updatePermissions();
 			player.offer(player.getGameModeData().setGameMode(GameModes.SPECTATOR));
 		}
@@ -103,17 +113,16 @@ public class UserEventsHandler {
 	
 	@Subscribe
 	public void onUserChat(PlayerChatEvent event) {
+		
 		BewomUser b = BewomUser.getUser(event.getUser());
 		
 		if (b.getRegistration() == WebRegistration.VALID) {
-			//Player is allowed into the server.
-			//Welcome message.
 			BewomMessageSink sink = new BewomMessageSink();
-			Text newMessage = sink.transformMessage(event.getSource(), event.getMessage());
-			event.setNewMessage(newMessage);
-		} else {
-			event.setCancelled(true);
+			Text newMessage = sink.transformMessage(event.getEntity(), event.getMessage());
+			Chat.sendMessage(event.getEntity(), Texts.toPlain(event.getUnformattedMessage()), newMessage);			
 		}
+		
+		event.setCancelled(true);
 		
 	}
 
@@ -126,7 +135,19 @@ public class UserEventsHandler {
 	public void onUserQuit(PlayerQuitEvent event) {
 		Player player = event.getUser();
 		UUID uuid = player.getUniqueId();
-		BewomUser.remove(uuid);
+		BewomUser u = BewomUser.getUser(uuid);
+		if(u != null){
+			
+			if(!u.isLogout()){
+				
+				Chat.sendMessage(player, "//logout", null);
+				u.setLogout(true);
+				u.remove();
+				
+			}
+			
+		}
+		
 	}
 
 	/**
@@ -148,31 +169,67 @@ public class UserEventsHandler {
 	@Subscribe
 	public void onUserRespawn(PlayerRespawnEvent event) {
 		Player player = event.getUser();
+		CentroPokemon cp = CentroManager.getClosest(player.getLocation(), player.getWorld().getName());
+		if(cp == null) {
+			return;
+		}
+		Location location = new Location(BewomByte.game.getServer().getWorld(cp.world).get().getLocation(cp.getVector()).getExtent(), cp.getVector().add(0.5, 0, 0.5));
+		event.setNewRespawnLocation(location);
 	}
 	
-	/**
-	 * Event triggered when a player right clicks a sign. 
-	 * @param event
-	 */
 	@Subscribe
-	public void onUserClickSign(PlayerInteractBlockEvent event)	 {
+	public void on(PlayerInteractBlockEvent event){
+
+		Player player = event.getEntity();
+		BewomUser user = BewomUser.getUser(player);
 		
-		if(!event.getInteractionType().equals(EntityInteractionTypes.USE)) return;
-		
-		Optional<TileEntity> entityOp = event.getBlock().getTileEntity();
-		
-		if(!entityOp.isPresent()) return;
-		
-		TileEntity entity = entityOp.get();
-		
-		Optional<SignData> dataOp = entity.getOrCreate(SignData.class);
-		
-		if(dataOp.isPresent()) {
-			SignData data = dataOp.get();
-			data.reset();
-			data.setLine(1, Texts.of(TextColors.BLUE, "Hello World!"));
-			entity.offer(data);
+		if (!user.isAdmin() && player.getWorld().getName().equals("world")) {
+			event.setCancelled(true);
 		}
+		
+		P.on(game, event);
+		
+	}
+	
+	@Subscribe
+	public void on(PlayerInteractEntityEvent event){
+		
+		Player player = event.getEntity();
+		BewomUser user = BewomUser.getUser(player);
+		
+		if (!user.isAdmin() && player.getWorld().getName().equals("world")) {
+			event.setCancelled(true);
+		}
+		
+	}
+	
+	@Subscribe
+	public void on(PlayerPlaceBlockEvent event){
+		
+		Player player = event.getEntity();
+		BewomUser user = BewomUser.getUser(player);
+		
+		if (!user.isAdmin()) {
+			if(player.getWorld().getName().equals("world")){
+				event.setCancelled(true);			
+			}
+			DeniedBlocks.on(game, event);
+		}
+		
+		
+	}
+	
+	@Subscribe
+	public void on(PlayerBreakBlockEvent event){
+		
+		Player player = event.getEntity();
+		BewomUser user = BewomUser.getUser(player);
+		
+		if (!user.isAdmin() && player.getWorld().getName().equals("world")) {
+			event.setCancelled(true);
+		}
+		
+		P.on(game, event);
 		
 	}
 	

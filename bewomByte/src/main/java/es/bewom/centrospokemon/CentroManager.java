@@ -49,7 +49,9 @@ public class CentroManager {
 		if(centros.size() == 0) return null;
 		CentroPokemon closest = centros.get(0);
 		for(CentroPokemon centro : centros) {
-			if(!centro.world.equals(world)) continue;
+			if(!centro.world.equals(world)){
+				continue;
+			}
 			int dist1 = closest.distance(location);
 			int dist2 = centro.distance(location);
 			if(dist2 < dist1) {
@@ -120,17 +122,6 @@ public class CentroManager {
 			e.printStackTrace();
 		}
 		
-	}
-	
-	@Subscribe
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		Player player = event.getUser();
-		CentroPokemon cp = CentroManager.getClosest(player.getLocation(), player.getWorld().getName());
-		if(cp == null) {
-			return;
-		}
-		Location location = new Location(player.getWorld().getLocation(cp.getVector()).getExtent(), cp.getVector().add(0.5, 0, 0.5));
-		event.setLocation(location);
 	}
 	
 	public static void init(BewomByte plugin) {
