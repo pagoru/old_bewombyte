@@ -11,7 +11,6 @@ import com.google.inject.Inject;
 
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.commands.Commands;
-import es.bewom.p.P;
 import es.bewom.spawn.SpawnManager;
 import es.bewom.teleport.TPManager;
 import es.bewom.user.BewomUser;
@@ -25,7 +24,7 @@ import es.bewom.warps.WarpManager;
  *
  */
 
-@Plugin(id="bewomByte", name="bewom byte", version="0.0b")
+@Plugin(id="bewomByte", name="bewom byte")
 public class BewomByte {
 	
 	@Inject

@@ -231,11 +231,26 @@ public class BewomUser {
 		return 0;
 	}
 	
-	/**
-	 * Returns the level of permissions this user has.
-	 * This is provided by the database connected to the forums.
-	 * @return int - The permission level.
-	 */
+	public boolean isAdmin(){
+		if(this.permissionLevel == PERM_LEVEL_ADMIN){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isVip(){
+		if(this.permissionLevel == PERM_LEVEL_VIP){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isUser(){
+		if(this.permissionLevel == PERM_LEVEL_USER){
+			return true;
+		}
+		return false;
+	}
 	
 	public String getPermissionType(){
 		

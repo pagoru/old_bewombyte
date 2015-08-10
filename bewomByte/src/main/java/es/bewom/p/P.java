@@ -8,8 +8,22 @@ import org.spongepowered.api.event.entity.player.PlayerBreakBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public class P {
+	
+	public static boolean first = false;
+	public static boolean second = false;
+	
+	public static World firstWorld;
+	public static double firstX;
+	public static double firstY;
+	public static double firstZ;
+
+	public static World secondWorld;
+	public static double secondX;
+	public static double secondY;
+	public static double secondZ;
 	
 	public static void on(Game game, PlayerInteractBlockEvent event){
 		
@@ -18,6 +32,7 @@ public class P {
 		double x = event.getBlock().getX();
 		double y = event.getBlock().getY();
 		double z = event.getBlock().getZ();
+		World world = p.getWorld();
 		
 		if(b != null){
 			
@@ -28,11 +43,37 @@ public class P {
 					|| b == BlockTypes.JUNGLE_DOOR
 					|| b == BlockTypes.SPRUCE_DOOR){
 				
-				event.getEntity().sendMessage(Texts.of("Door"));
-				if(x == 134 && (y == 64 || y == 65) && z == 293){
-					p.setLocation(new Location(p.getWorld(), 134.5, 64, 295.5));									
+				p.sendMessage(Texts.of("Door!"));
+				
+				if(x == firstX && (y == firstY || y == firstY + 1) && z == firstZ && world.equals(firstWorld)){
+					event.setCancelled(true);
+					p.setLocation(new Location(secondWorld, secondX + 0.5, secondY, secondZ + 0.5));									
 				}
-				event.setCancelled(true);
+				
+				if(x == secondX && (y == secondY || y == secondY + 1) && z == secondZ && world.equals(secondWorld)){
+					event.setCancelled(true);
+					p.setLocation(new Location(firstWorld, firstX + 0.5, firstY, firstZ + 0.5));								
+				}
+				
+				if(second){
+					event.setCancelled(true);
+					secondX = x;
+					secondY = y;
+					secondZ = z;
+					secondWorld = world;
+					second = false;
+					p.sendMessage(Texts.of("Selected doors."));
+				}
+				if(first){
+					event.setCancelled(true);
+					firstX = x;
+					firstY = y;
+					firstZ = z;
+					firstWorld = world;
+					first = false;
+					second = true;
+					p.sendMessage(Texts.of("Select second door."));
+				}
 				
 			}
 			
@@ -59,7 +100,6 @@ public class P {
 					|| b == BlockTypes.JUNGLE_DOOR
 					|| b == BlockTypes.SPRUCE_DOOR){
 				
-				event.getEntity().sendMessage(Texts.of("Door Up"));
 				event.setCancelled(true);
 				
 			}

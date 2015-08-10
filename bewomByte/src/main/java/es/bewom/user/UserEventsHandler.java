@@ -2,39 +2,37 @@ package es.bewom.user;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.UUID;
 
 import org.spongepowered.api.Game;
-import org.spongepowered.api.block.BlockType;
-import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.block.tileentity.TileEntity;
-import org.spongepowered.api.data.manipulator.tileentity.SignData;
-import org.spongepowered.api.entity.EntityInteractionTypes;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityType;
+import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.hanging.ItemFrame;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.entity.player.gamemode.GameModes;
 import org.spongepowered.api.event.Subscribe;
+import org.spongepowered.api.event.entity.EntityInteractEntityEvent;
+import org.spongepowered.api.event.entity.living.human.HumanEvent;
+import org.spongepowered.api.event.entity.living.human.HumanInteractEntityEvent;
 import org.spongepowered.api.event.entity.player.PlayerBreakBlockEvent;
-import org.spongepowered.api.event.entity.player.PlayerChangeBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerChatEvent;
+import org.spongepowered.api.event.entity.player.PlayerDropItemEvent;
+import org.spongepowered.api.event.entity.player.PlayerEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
+import org.spongepowered.api.event.entity.player.PlayerInteractEntityEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractEvent;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.event.entity.player.PlayerMoveEvent;
 import org.spongepowered.api.event.entity.player.PlayerPlaceBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerQuitEvent;
 import org.spongepowered.api.event.entity.player.PlayerRespawnEvent;
-import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Text.Literal;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.title.Titles;
 import org.spongepowered.api.world.Location;
-
-import com.google.common.base.Optional;
 
 import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroManager;
@@ -119,8 +117,6 @@ public class UserEventsHandler {
 		BewomUser b = BewomUser.getUser(event.getUser());
 		
 		if (b.getRegistration() == WebRegistration.VALID) {
-			//Player is allowed into the server.
-			//Welcome message.			
 			BewomMessageSink sink = new BewomMessageSink();
 			Text newMessage = sink.transformMessage(event.getEntity(), event.getMessage());
 			Chat.sendMessage(event.getEntity(), Texts.toPlain(event.getUnformattedMessage()), newMessage);			
@@ -183,20 +179,55 @@ public class UserEventsHandler {
 	
 	@Subscribe
 	public void on(PlayerInteractBlockEvent event){
+
+		Player player = event.getEntity();
+		BewomUser user = BewomUser.getUser(player);
+		
+		if (!user.isAdmin() && player.getWorld().getName().equals("world")) {
+			event.setCancelled(true);
+		}
 		
 		P.on(game, event);
 		
 	}
 	
 	@Subscribe
+	public void on(PlayerInteractEntityEvent event){
+		
+		Player player = event.getEntity();
+		BewomUser user = BewomUser.getUser(player);
+		
+		if (!user.isAdmin() && player.getWorld().getName().equals("world")) {
+			event.setCancelled(true);
+		}
+		
+	}
+	
+	@Subscribe
 	public void on(PlayerPlaceBlockEvent event){
 		
-		DeniedBlocks.on(game, event);
+		Player player = event.getEntity();
+		BewomUser user = BewomUser.getUser(player);
+		
+		if (!user.isAdmin()) {
+			if(player.getWorld().getName().equals("world")){
+				event.setCancelled(true);			
+			}
+			DeniedBlocks.on(game, event);
+		}
+		
 		
 	}
 	
 	@Subscribe
 	public void on(PlayerBreakBlockEvent event){
+		
+		Player player = event.getEntity();
+		BewomUser user = BewomUser.getUser(player);
+		
+		if (!user.isAdmin() && player.getWorld().getName().equals("world")) {
+			event.setCancelled(true);
+		}
 		
 		P.on(game, event);
 		
