@@ -15,15 +15,7 @@ public class P {
 	public static boolean first = false;
 	public static boolean second = false;
 	
-	public static World firstWorld;
-	public static double firstX;
-	public static double firstY;
-	public static double firstZ;
-
-	public static World secondWorld;
-	public static double secondX;
-	public static double secondY;
-	public static double secondZ;
+	public static Door d = new Door();
 	
 	public static void on(Game game, PlayerInteractBlockEvent event){
 		
@@ -36,40 +28,38 @@ public class P {
 		
 		if(b != null){
 			
-			if(b == BlockTypes.WOODEN_DOOR
-					|| b == BlockTypes.ACACIA_DOOR
-					|| b == BlockTypes.BIRCH_DOOR
-					|| b == BlockTypes.DARK_OAK_DOOR
-					|| b == BlockTypes.JUNGLE_DOOR
-					|| b == BlockTypes.SPRUCE_DOOR){
+			if(equalsAnyWoodenDoorTypes(b)){
 				
 				p.sendMessage(Texts.of("Door!"));
 				
-				if(x == firstX && (y == firstY || y == firstY + 1) && z == firstZ && world.equals(firstWorld)){
-					event.setCancelled(true);
-					p.setLocation(new Location(secondWorld, secondX + 0.5, secondY, secondZ + 0.5));									
-				}
-				
-				if(x == secondX && (y == secondY || y == secondY + 1) && z == secondZ && world.equals(secondWorld)){
-					event.setCancelled(true);
-					p.setLocation(new Location(firstWorld, firstX + 0.5, firstY, firstZ + 0.5));								
+				if(d != null){
+					if(d.setDoorPos(0).isSelected(x, y, z, world)){
+						event.setCancelled(true);
+						p.setLocation(d.setDoorPos(1).getLocation());
+					}
+					if(d.setDoorPos(1).isSelected(x, y, z, world)){
+						event.setCancelled(true);
+						p.setLocation(d.setDoorPos(0).getLocation());
+					}
 				}
 				
 				if(second){
 					event.setCancelled(true);
-					secondX = x;
-					secondY = y;
-					secondZ = z;
-					secondWorld = world;
+					BlockType doorW = game.getServer().getWorld(world.getUniqueId()).get().getBlock((int) x, (int) y + 1, (int) z).getType();
+					if(equalsAnyWoodenDoorTypes(doorW)){
+						y -= 1;
+					}
+					d.setDoorPos(0).setLocation(x, y, z).setWorld(world);
 					second = false;
 					p.sendMessage(Texts.of("Selected doors."));
 				}
 				if(first){
 					event.setCancelled(true);
-					firstX = x;
-					firstY = y;
-					firstZ = z;
-					firstWorld = world;
+					BlockType doorW = game.getServer().getWorld(world.getUniqueId()).get().getBlock((int) x, (int) y + 1, (int) z).getType();
+					if(equalsAnyWoodenDoorTypes(doorW)){
+						y -= 1;
+					}
+					d.setDoorPos(1).setLocation(x, y, z).setWorld(world);
 					first = false;
 					second = true;
 					p.sendMessage(Texts.of("Select second door."));
@@ -79,6 +69,18 @@ public class P {
 			
 		}
 		
+	}
+	
+	public static boolean equalsAnyWoodenDoorTypes(BlockType b){
+		if(b == BlockTypes.WOODEN_DOOR
+				|| b == BlockTypes.ACACIA_DOOR
+				|| b == BlockTypes.BIRCH_DOOR
+				|| b == BlockTypes.DARK_OAK_DOOR
+				|| b == BlockTypes.JUNGLE_DOOR
+				|| b == BlockTypes.SPRUCE_DOOR){
+			return true;
+		}
+		return false;
 	}
 	
 	public static void on(Game game, PlayerBreakBlockEvent event){
